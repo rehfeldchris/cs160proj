@@ -3,12 +3,12 @@
 interface CourseAttributes
 {
     /**
-     * @return array, like ['name' => 'john doe'. 'image' => 'url'http://....']
+     * @return array, like ['name' => 'john doe'. 'image' => 'http://....']
      */
     public function getPrimaryProfessor();
     
     /**
-     * @return array of array, with the subarrays like ['name' => 'john doe'. 'image' => 'url'http://....']
+     * @return array of array, with the subarrays like ['name' => 'john doe'. 'image' => 'http://....']
      */
     public function getProfessors();
     
@@ -18,7 +18,7 @@ interface CourseAttributes
     public function getCourseName();
     
     /**
-     * @return string
+     * @return string of plain text. no html, but may have line breaks.
      */
     public function getCourseDescription();
     

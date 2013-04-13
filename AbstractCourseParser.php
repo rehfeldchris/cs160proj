@@ -2,11 +2,14 @@
 
 require_once 'Parser.php';
 require_once 'CourseAttributes.php';
+require_once 'IllegalStateException.php';
+require_once 'CourseParsingException.php';
+
 
 abstract class AbstractCourseParser implements Parser, CourseAttributes
 {
-    protected $primaryProfessorName
-            , $otherProfessorNames
+    protected $primaryProfessor
+            , $otherProfessors
             , $courseName
             , $courseDescription
             , $startDate
@@ -19,29 +22,37 @@ abstract class AbstractCourseParser implements Parser, CourseAttributes
     public function isValid()
     {
         return $this->isParsed
-            && strlen($this->primaryProfessorName) > 0
+            && $this->primaryProfessor
+            && strlen($this->primaryProfessor['name']) > 2
+            && strlen($this->primaryProfessor['name']) < 100
             && strlen($this->courseName) > 0
+            && strlen($this->courseName) < 150
             && strlen($this->courseDescription) > 0
+            && strlen($this->courseDescription) < 2000
             && strlen($this->universityName) > 0
+            && strlen($this->universityName) < 150
             && $this->duration > 0
+            && $this->duration < 365
             && $this->startDate
             ;
     }
     
     /**
-     * @return string
+     * @return array, like ['name' => 'john doe'. 'image' => 'http://....']
      */
-    public function getPrimaryProfessorName()
+    public function getPrimaryProfessor()
     {
-        return $this->primaryProfessorName;
+        $this->checkState();
+        return $this->primaryProfessor;
     }
     
     /**
-     * @return array of strings
+     * @return array of array, with the subarrays like ['name' => 'john doe'. 'image' => 'http://....']
      */
-    public function getProfessorNames()
+    public function getProfessors()
     {
-        return $this->otherProfessorNames;
+        $this->checkState();
+        return $this->otherProfessors;
     }
     
     /**
@@ -49,6 +60,7 @@ abstract class AbstractCourseParser implements Parser, CourseAttributes
      */
     public function getCourseName()
     {
+        $this->checkState();
         return $this->courseName;
     }
     
@@ -57,6 +69,7 @@ abstract class AbstractCourseParser implements Parser, CourseAttributes
      */
     public function getCourseDescription()
     {
+        $this->checkState();
         return $this->courseDescription;
     }
     
@@ -65,6 +78,7 @@ abstract class AbstractCourseParser implements Parser, CourseAttributes
      */
     public function getStartDate()
     {
+        $this->checkState();
         return $this->startDate;
     }
     
@@ -73,6 +87,7 @@ abstract class AbstractCourseParser implements Parser, CourseAttributes
      */
     public function getEndDate()
     {
+        $this->checkState();
         return $this->endDate;
     }
     
@@ -81,6 +96,7 @@ abstract class AbstractCourseParser implements Parser, CourseAttributes
      */
     public function getDuration()
     {
+        $this->checkState();
         return $this->duration;
     }
     
@@ -89,6 +105,7 @@ abstract class AbstractCourseParser implements Parser, CourseAttributes
      */
     public function getWorkload()
     {
+        $this->checkState();
         return $this->workload;
     }
     
@@ -97,6 +114,24 @@ abstract class AbstractCourseParser implements Parser, CourseAttributes
      */
     public function getUniversityName()
     {
+        $this->checkState();
         return $this->universityName;
+    }
+    
+    /**
+     * You cannot call the getters in this object until the values are populated, 
+     * which happens when you call parse().
+     * 
+     * @throws IllegalStateException
+     */
+    protected function checkState()
+    {
+        if (!$this->isParsed) {
+            throw new IllegalStateException(sprintf(
+                "must call parse() before calling '%s::%s'"
+              , __CLASS__
+              , __METHOD__
+            ));
+        }
     }
 }
