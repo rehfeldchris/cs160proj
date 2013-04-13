@@ -3,7 +3,7 @@
 interface CourseAttributes
 {
     /**
-     * @return array, with the subarrays like ['name' => 'john doe'. 'image' => 'url'http://....']
+     * @return array, like ['name' => 'john doe'. 'image' => 'url'http://....']
      */
     public function getPrimaryProfessor();
     
