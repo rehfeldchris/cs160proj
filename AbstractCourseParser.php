@@ -1,9 +1,19 @@
 <?php
 
+
+/**
+ * Base class for edx and coursera detailed info page parsers.
+ * Has some getters, and defines what data constitues a valid parser.
+ * 
+ * @author Chris Rehfeld
+ */
+
+
 require_once 'Parser.php';
 require_once 'CourseAttributes.php';
 require_once 'IllegalStateException.php';
 require_once 'CourseParsingException.php';
+
 
 
 abstract class AbstractCourseParser implements Parser, CourseAttributes
@@ -19,6 +29,15 @@ abstract class AbstractCourseParser implements Parser, CourseAttributes
             , $universityName
             , $isParsed;
             
+    /**
+     * Makes an educated guess as to whether or not the getters will return valid data.
+     * This should be a very good litmus test for whether or not parsing was successful.
+     * 
+     * An invalid parser requires immediate investigation, 
+     * because it's likely caused by the remote website changing their data format.
+     * 
+     * @return type boolean
+     */
     public function isValid()
     {
         return $this->isParsed
@@ -28,10 +47,9 @@ abstract class AbstractCourseParser implements Parser, CourseAttributes
             && strlen($this->courseName) > 0
             && strlen($this->courseName) < 150
             && strlen($this->courseDescription) > 0
-            && strlen($this->courseDescription) < 2000
+            && strlen($this->courseDescription) < 8000
             && strlen($this->universityName) > 0
             && strlen($this->universityName) < 150
-            && $this->duration > 0
             && $this->duration < 365
             && $this->startDate
             ;

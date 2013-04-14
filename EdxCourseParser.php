@@ -23,9 +23,23 @@ class EdxCourseParser extends AbstractCourseParser
      */
     public function __construct($htmlText)
     {
+        if (!is_string($htmlText))
+        {
+            throw new IllegalArgumentException("arg1 must be string");
+        }
+        if (strlen($htmlText) < 20)
+        {
+            throw new IllegalArgumentException("html text too short");
+        }
         $this->htmlText = $htmlText;
     }
     
+    /**
+     * Trys to extract data. hopefully after this method is called, 
+     * the getters should return valid info.
+     * 
+     * @throws CourseParsingException if something really bad happens
+     */
     public function parse()
     {
         //marks that we attempted parsing
@@ -36,13 +50,23 @@ class EdxCourseParser extends AbstractCourseParser
         
         //course start date
         $start = pq('.start-date')->slice(0, 1)->text();
-        //format in html is Sep 15, 2013
+        //format in html is usally Sep 15, 2013
         $this->startDate = DateTime::createFromFormat('M j, Y', trim($start));
+        //but sometimes just Sept, 2013
+        if (!$this->startDate) 
+        {
+            $this->startDate = DateTime::createFromFormat('M, Y', trim($start));
+        }
         
         //course end date
         $end = pq('.final-date')->slice(0, 1)->text();
-        //format in html is Sep 15, 2013
+        //format in html is usally Sep 15, 2013
         $this->endDate = DateTime::createFromFormat('M j, Y', trim($end));
+        //but sometimes just Sept, 2013
+        if (!$this->endDate)
+        {
+            $this->endDate = DateTime::createFromFormat('M, Y', trim($end));
+        }
         
         //calc duration, if possible
         if ($this->startDate && $this->endDate)
@@ -70,7 +94,7 @@ class EdxCourseParser extends AbstractCourseParser
                 //add the hostname if its missing
                 if (!isset($parts['host']))
                 {
-                    $url = "https://www.edx.org/$url";
+                    $url = "https://www.edx.org$url";
                     //make sure new url is well formed
                     if (false === parse_url($url))
                     {
@@ -84,7 +108,6 @@ class EdxCourseParser extends AbstractCourseParser
         }
         $this->otherProfessors = $staff;
         $this->primaryProfessor = $staff[0];
-
         
         //university name
         $this->universityName = pq('hgroup h1 a')->slice(0, 1)->text();

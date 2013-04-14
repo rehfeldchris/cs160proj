@@ -1,13 +1,33 @@
 <?php
 
+/**
+ * Takes in json text, and extracts relevant peices of info.
+ * This code is specifically for coursera.org
+ * 
+ * @author Chris Rehfeld
+ */
+
 require_once 'AbstractCourseParser.php';
+
+
 
 class CourseraCourseParser extends AbstractCourseParser
 {
     protected $generalJsonText, $instructorJsonText;
     
+    /**
+     * Initializes the object, making it ready for the parse() method to be called.
+     * 
+     * @param string $generalJsonText the json text that contains the general info about the course
+     * @param string $instructorJsonText the json text that contains info about the professors for the course
+     * @throws IllegalArgumentException
+     */
     public function __construct($generalJsonText, $instructorJsonText)
     {
+        if (!is_string($generalJsonText) || !is_string($instructorJsonText))
+        {
+            throw new IllegalArgumentException("arg 1 and 2 must be string");
+        }
         if (strlen($generalJsonText) < 20 || strlen($instructorJsonText) < 20)
         {
             throw new IllegalArgumentException("json text too short");
@@ -16,6 +36,13 @@ class CourseraCourseParser extends AbstractCourseParser
         $this->instructorJsonText = $instructorJsonText;
     }
     
+    
+    /**
+     * Trys to extract data. hopefully after this method is called, 
+     * the getters should return valid info.
+     * 
+     * @throws CourseParsingException if something really bad happens
+     */
     public function parse()
     {
         //marks that we attempted parsing
@@ -68,8 +95,15 @@ class CourseraCourseParser extends AbstractCourseParser
             $this->workload = $ave;
         }
         
+        
+        
         //start date
-        $this->startDate = DateTime::createFromFormat('j F Y', trim($generalObj->courses[0]->start_date_string));
+        $course = $generalObj->courses[0];
+        if ($course->start_date_string) {
+            $this->startDate = DateTime::createFromFormat('j F Y', trim($course->start_date_string));
+        } else {
+            $this->startDate = DateTime::createFromFormat('Y n d', "{$course->start_year} {$course->start_month} {$course->start_day}");
+        }
         
         //duration
         if (preg_match('~(\d+) weeks~', $generalObj->courses[0]->duration_string, $matches))
@@ -87,7 +121,18 @@ class CourseraCourseParser extends AbstractCourseParser
         }
         
         
-        //TODO: professors
+        //staff/professors
+        $staff = array();
+        foreach ($instructorObj as $prof) 
+        {
+            $name = strlen($prof->middle_name)
+                  ? "{$prof->first_name} {$prof->middle_name} {$prof->last_name}"
+                  : "{$prof->first_name} {$prof->last_name}";
+            $image = $prof->photo;
+            $staff[] = compact('name', 'image');
+        }
+        $this->otherProfessors = $staff;
+        $this->primaryProfessor = $staff[0];
 
     }
 }

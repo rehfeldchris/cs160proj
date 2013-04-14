@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * Defines the common getters that both edx and coursera parsers will provide.
+ * 
+ * This doesn't neccesarily mean valid data will be returned by all the getters.
+ * eg, sometimes a weekly workload isnt listed for the course.
+ * 
+ * @author Chris Rehfeld
+ */
+
+
+
 interface CourseAttributes
 {
     /**

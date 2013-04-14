@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Indictes something went very wrong during the parsing phase of a courses 
- * detailed info page.
+ * An operation was attempted when the object was in a state that doesnt support the op.
  * 
  * @author Chris Rehfeld
  */

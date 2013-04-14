@@ -4,6 +4,8 @@
  * not they think they successfully parsed their input.
  * 
  * They should also parse only when told to, not upon constructor initialization.
+ * 
+ * @author Chris Rehfeld
  */
 
 
