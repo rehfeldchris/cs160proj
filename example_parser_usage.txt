@@ -1,0 +1,12 @@
+<?php
+
+require_once 'ParserFactory.php';
+$factory = new ParserFactory();
+try {
+	$courseraParser = $factory->create('https://www.coursera.org/course/innovacion');
+	$courseraParser->parse();
+	echo $courseraParser->getCourseName();
+	//etc...
+} catch (Exception $e) {
+    //...
+}
