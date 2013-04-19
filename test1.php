@@ -25,17 +25,16 @@ foreach ($edxUrls as $url) {
 	
 	$edxParser = $factory->create($url);
 	$edxParser->parse();
-//	var_dump($edxParser->isValid());
-//	var_dump($edxParser);
-	echo $url . "\n";
+	echo "Url: " . $url . "\n";
 	if ($edxParser->isValid()) {
-		echo $edxParser->getCourseName() . "\n";
-		echo $edxParser->getCourseDescription() . "\n";
-		echo $edxParser->getDuration() . "\n";
+		echo "Name: " . $edxParser->getCourseName() . "\n";
+		echo "Duration: " . $edxParser->getDuration() . "\n";
+		echo "Image: " . $edx_urls_parser->getCourseImage($url) . "\n";
+		echo "Short Description: " . $edx_urls_parser->getCourseShortDesc($url) . "\n";
 	}
 	echo "---\n";
 	$repeat++;
-	if ($repeat == 1) {
+	if ($repeat == 3) {
 		break;
 	}
 }
@@ -47,17 +46,15 @@ foreach ($courseraUrls as $url) {
 	
 	$courseraParser = $factory->create($url);
 	$courseraParser->parse();
-//	var_dump($courseraParser->isValid());
-//	var_dump($courseraParser);
-	echo $url . "\n";
+	echo "Url: " . $url . "\n";
 	if ($courseraParser->isValid()) {
-		echo $courseraParser->getCourseName() . "\n";
-		echo $courseraParser->getCourseDescription() . "\n";
-		echo $courseraParser->getDuration() . "\n";
+		echo "Name: " . $courseraParser->getCourseName() . "\n";
+		echo "Duration: " . $courseraParser->getDuration() . "\n";
+		echo "Image: " . $coursera_urls_parser->getCourseImage($url) . "\n";
 	}
 	echo "---\n";
 	$repeat++;
-	if ($repeat == 1) {
+	if ($repeat == 3) {
 		break;
 	}
 }

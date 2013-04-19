@@ -24,7 +24,7 @@ class CourseraUrlsParser extends AbstractUrlsParser
     }
 	
 	/**
-	 * Extracts course urls for coursera.org
+	 * Extracts course urls and images for coursera.org
 	 */
 	public function parse() 
 	{
@@ -32,7 +32,9 @@ class CourseraUrlsParser extends AbstractUrlsParser
 		
 		if ($this->c_arr) {
 			foreach ($this->c_arr['topics'] as  $value) {
-				$this->urls[] = 'https://www.coursera.org/course/' . $value['short_name'];
+				$url = 'https://www.coursera.org/course/' . $value['short_name'];
+				$this->urls[] = $url;
+				$this->courseImages[$url] = $value['large_icon'];
 			}
 		}
 		
