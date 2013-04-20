@@ -20,6 +20,6 @@ define('DATABASE','sjsucsor_160s1g1');
 //define('DATABASE','sjsucsor_160s1g1');
 
 //database connection 
-$dbc = mysqli_connect(HOST,NAME,PASSWORD,DATABASE) or die(mysqli_connect_error);
+$dbc = mysqli_connect(HOST,NAME,PASSWORD,DATABASE) or die(mysqli_connect_error());
 
 ?>
