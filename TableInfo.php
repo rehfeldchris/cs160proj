@@ -39,7 +39,7 @@ class TableInfo
 		}
 		echo"</tr>";
 		$size=count($rowsList);
-		
+		$count=0;
 		
 		foreach($rowsList as $row)
 		{
@@ -47,7 +47,16 @@ class TableInfo
 			echo "<tr>";
 			foreach($row as $element)
 			{
-				echo "<td>$element</td>";
+				$count++;
+				if(checkisImage($element))
+				{
+					echo "<td><img src=\"$element \" width=\"100\" height=\"100\"</td>";
+				}
+				else
+				{
+					echo "<td>$element</td>";
+				}
+				
 				
 				
 			}
@@ -60,6 +69,31 @@ class TableInfo
 	}
 	
 }
+	function findStr($mystring,$findme)
+	{
+		//$mystring = 'abc';
+		//$findme   = 'a';
+		$pos = strpos($mystring, $findme);
+
+		if ($pos === false) 
+		{
+			
+			return false;
+		} 
+		else 
+		{
+		
+			return true;
+		}
+	}
+	function checkisImage($element)
+	{
+		if(findStr($element,".png")||findStr($element,".jpeg")||
+			findStr($element,".JPG")||findStr($element,".jpg")||findStr($element,".gif"))
+			return true;
+			else return false;
+	}
+
 	$db=$GLOBALS['dbc'];
 	$que="Select * from course_data,coursedetails where coursedetails.id=course_data.id";
 		$result=$db->query($que) or die(mysqli_error($db));
