@@ -25,11 +25,11 @@ class EdxCourseParser extends AbstractCourseParser
     {
         if (!is_string($htmlText))
         {
-            throw new IllegalArgumentException("arg1 must be string");
+            throw new InvalidArgumentException("arg1 must be string");
         }
         if (strlen($htmlText) < 20)
         {
-            throw new IllegalArgumentException("html text too short");
+            throw new InvalidArgumentException("html text too short");
         }
         $this->htmlText = $htmlText;
     }

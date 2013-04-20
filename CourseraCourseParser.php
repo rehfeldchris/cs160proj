@@ -26,11 +26,11 @@ class CourseraCourseParser extends AbstractCourseParser
     {
         if (!is_string($generalJsonText) || !is_string($instructorJsonText))
         {
-            throw new IllegalArgumentException("arg 1 and 2 must be string");
+            throw new InvalidArgumentException("arg 1 and 2 must be string");
         }
         if (strlen($generalJsonText) < 20 || strlen($instructorJsonText) < 20)
         {
-            throw new IllegalArgumentException("json text too short");
+            throw new InvalidArgumentException("json text too short");
         }
         $this->generalJsonText = $generalJsonText;
         $this->instructorJsonText = $instructorJsonText;
