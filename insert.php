@@ -76,17 +76,17 @@ foreach ($sitename as $url) {
 		 	  VALUES ('0', 'title', 'short', 'long', 'course', 'video', '2013-04-04', '12', 'image', 'charr', 'site');";
 		
 		$dbc = $GLOBALS['dbc'];
-		$dbc->query($que) or die(mysqli_error($dbc));
+		$dbc->query($que) or die(mysqli_error($dbc)); 
 		$id =mysqli_insert_id($dbc);                        //get last auto generated id
 		
 		foreach($prim_prof as $row){    					 //loop through 2d array
 			 
-			$name = mysql_real_escape_string($row["name"]);  //get the first element
-			$image= mysql_real_escape_string($row["image"]); //get the second element
+			$name = $dbc->real_escape_string($row["name"]);  //get the first element
+			$image= $dbc->real_escape_string($row["image"]); //get the second element
 				  											 //prepare sql	
 		    $sql = "INSERT INTO `sjsucsor_160s1g1`.`coursedetails`(`id`, `profname`, `profimage`)
 					VALUES 
-					( '$id', '$name', '$image');" or die(mysql_error());	  
+					( '$id', '$name', '$image');" or die(mysqli_error());	  
 			
 			$dbc=$GLOBALS['dbc'];		                   //can't access $dbc whithout grabbing it from GLOBALS['dbc']
 			$dbc->query($sql) or die(mysqli_error());	   //insert 
