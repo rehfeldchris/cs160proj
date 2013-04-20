@@ -19,9 +19,11 @@ class EdxCourseParser extends AbstractCourseParser
     /**
      * Initializes the object, making it ready for the parse() method to be called.
      * 
-     * @param type $htmlText the full html source code, utf8 encoded
+     * @param string $htmlText the full html source code, utf8 encoded.
+     * @param string $homepageUrl the url to the detailed course description webpage.
+     * @param string $shortCourseDescription a short textual description of the course. probably 1 sentence.
      */
-    public function __construct($htmlText)
+    public function __construct($homepageUrl, $htmlText, $shortCourseDescription)
     {
         if (!is_string($htmlText))
         {
@@ -32,6 +34,8 @@ class EdxCourseParser extends AbstractCourseParser
             throw new InvalidArgumentException("html text too short");
         }
         $this->htmlText = $htmlText;
+        $this->homepageUrl = $homepageUrl;
+        $this->shortCourseDescription = $shortCourseDescription;
     }
     
     /**
@@ -122,8 +126,50 @@ class EdxCourseParser extends AbstractCourseParser
             $this->workload = (int) $matches[0];
         }
         
-        //description
-        $this->courseDescription = pq('section.about p')->text();
+        //long course description
+        $this->longCourseDescription = pq('section.about p')->text();
+        
+        //category names....but edx doesnt categorize, so we just provide an empty list
+        $this->categoryNames = array();
+        
+        //course photo
+        $photoUrl = pq('div.hero img')->slice(0, 1)->attr('src');
+        if (strlen($photoUrl) > 0)
+        {
+            $parts = parse_url($photoUrl);
+            if (!$parts)
+            {
+                throw new CourseParsingException("couldnt parse photo url");
+            }
+            else
+            {
+                $this->coursePhotoUrl = isset($parts['host'])
+                    ? $photoUrl
+                    : "http://www.edx.org" . $photoUrl;
+            }
+        }
+        else
+        {
+            throw new CourseParsingException("couldnt find photo url");
+        }
+        
+        
+        
+        
+        //course video
+        $videoUrl = pq('#video-modal iframe')->slice(0, 1)->attr('src');
+        if (strlen($videoUrl) > 0)
+        {
+            $parts = parse_url($videoUrl);
+            if (!$parts)
+            {
+                throw new CourseParsingException("couldnt parse video url");
+            }
+            else
+            {
+                $this->courseVideoUrl = $videoUrl;
+            }
+        }
         
     }
 }

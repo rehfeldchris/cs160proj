@@ -40,14 +40,16 @@ foreach ($courseraUrls as $url) {
     if (!$p->isValid()) {
         echo "$url\n\n\n\n\n";
         var_dump($p);
+        exit;
     }
 }
 foreach ($edxUrls as $url) {
-    $p = $factory->create($url);
+    $p = $factory->create($url, array('shortCourseDescription' => 'foo'));
     $p->parse();
     if (!$p->isValid()) {
         echo "$url\n\n\n\n\n";
         var_dump($p);
+        exit;
     }
 }
 

@@ -13,7 +13,8 @@ require_once 'AbstractCourseParser.php';
 
 class CourseraCourseParser extends AbstractCourseParser
 {
-    protected $generalJsonText, $instructorJsonText;
+    protected $generalJsonText
+            , $instructorJsonText;
     
     /**
      * Initializes the object, making it ready for the parse() method to be called.
@@ -22,8 +23,10 @@ class CourseraCourseParser extends AbstractCourseParser
      * @param string $instructorJsonText the json text that contains info about the professors for the course
      * @throws IllegalArgumentException
      */
-    public function __construct($generalJsonText, $instructorJsonText)
+    public function __construct($homepageUrl, $generalJsonText, $instructorJsonText)
     {
+        $this->homepageUrl = $homepageUrl;
+        
         if (!is_string($generalJsonText) || !is_string($instructorJsonText))
         {
             throw new InvalidArgumentException("arg 1 and 2 must be string");
@@ -99,16 +102,19 @@ class CourseraCourseParser extends AbstractCourseParser
         
         //start date
         $course = $generalObj->courses[0];
-        if ($course->start_date_string) {
+        if ($course->start_date_string)
+        {
             $this->startDate = DateTime::createFromFormat('j F Y', trim($course->start_date_string));
-        } else {
+        }
+        else 
+        {
             $this->startDate = DateTime::createFromFormat('Y n d', "{$course->start_year} {$course->start_month} {$course->start_day}");
         }
         
         //duration
         if (preg_match('~(\d+) weeks~', $generalObj->courses[0]->duration_string, $matches))
         {
-            //convert to days
+            //convert weeks to days
             $this->duration = $matches[1] * 7;
         }
         
@@ -133,6 +139,49 @@ class CourseraCourseParser extends AbstractCourseParser
         }
         $this->otherProfessors = $staff;
         $this->primaryProfessor = $staff[0];
+        
+        
+        //categories
+        $categoryNames = array();
+        foreach ($generalObj->categories as $category)
+        {
+            $categoryNames[] = $category->name;
+        }
+        $this->categoryNames = $categoryNames;
+        
+        //short description
+        $this->shortCourseDescription = $generalObj->short_description;
+        
+        //long description
+        $this->longCourseDescription = $generalObj->about_the_course;
+        
+        //video url
+        if (strlen($generalObj->video) > 0)
+        {
+            if (!preg_match('~^[a-zA-Z0-9_-]{5,50}$~Di', $generalObj->video))
+            {
+                throw new CourseParsingException("Unexpected youtube url component format. val='{$generalObj->video}'");
+            }
+            else
+            {
+                $this->courseVideoUrl = 'http://www.youtube.com/watch?v=' . urlencode($generalObj->video);
+            }
+        }
+        
+        
+        //photo url
+        $photoUrl = $generalObj->photo;
+        if (strlen($photoUrl) > 0)
+        {
+            $parts = parse_url($photoUrl);
+            if (isset($parts['host']))
+            {
+                $this->coursePhotoUrl = $photoUrl;
+            }
+        }
+       
+        
+        
 
     }
 }

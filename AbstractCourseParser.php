@@ -21,13 +21,21 @@ abstract class AbstractCourseParser implements Parser, CourseAttributes
     protected $primaryProfessor
             , $otherProfessors
             , $courseName
-            , $courseDescription
+            , $shortCourseDescription
+            , $longCourseDescription
+            , $coursePhotoUrl
+            , $categoryNames
             , $startDate
             , $endDate
             , $duration
             , $workload
             , $universityName
-            , $isParsed;
+            , $isParsed
+            , $courseVideoUrl
+            
+            ;
+    
+
             
     /**
      * Makes an educated guess as to whether or not the getters will return valid data.
@@ -46,12 +54,18 @@ abstract class AbstractCourseParser implements Parser, CourseAttributes
             && strlen($this->primaryProfessor['name']) < 100
             && strlen($this->courseName) > 0
             && strlen($this->courseName) < 150
-            && strlen($this->courseDescription) > 0
-            && strlen($this->courseDescription) < 8000
+            && strlen($this->shortCourseDescription) > 0
+            && strlen($this->shortCourseDescription) < 5000
+            && strlen($this->longCourseDescription) > 0
+            && strlen($this->longCourseDescription) < 10000
             && strlen($this->universityName) > 0
             && strlen($this->universityName) < 150
             && $this->duration < 365
             && $this->startDate
+            && strlen($this->coursePhotoUrl) > 0
+            && parse_url($this->coursePhotoUrl)
+            && (!$this->courseVideoUrl || parse_url($this->courseVideoUrl))
+            && parse_url($this->homepageUrl)
             ;
     }
     
@@ -83,12 +97,36 @@ abstract class AbstractCourseParser implements Parser, CourseAttributes
     }
     
     /**
+     * The full course description.
+     * 
      * @return string
      */
-    public function getCourseDescription()
+    public function getLongCourseDescription()
     {
         $this->checkState();
-        return $this->courseDescription;
+        return $this->longCourseDescription;
+    }
+    
+    /**
+     * An small part of the ful course description,
+     * 
+     * @return string
+     */
+    public function getShortCourseDescription()
+    {
+        $this->checkState();
+        return $this->shortCourseDescription;
+    }
+    
+    /**
+     * A url to an image that showcases the course. The image may be any size and type.
+     * 
+     * @return string
+     */
+    public function getCoursePhotoUrl()
+    {
+        $this->checkState();
+        return $this->coursePhotoUrl;
     }
     
     /**
@@ -137,6 +175,32 @@ abstract class AbstractCourseParser implements Parser, CourseAttributes
     }
     
     /**
+     * Returns an array of strings representing category names. 
+     * This course belongs to each category in the array.
+     * The names are NOT processed or normalized at all.
+     * The array can be empty.
+     * 
+     * @return array of string
+     */
+    public function getCategoryNames()
+    {
+        $this->checkState();
+        return $this->categoryNames;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getHomepageUrl()
+    {
+        $this->checkState();
+        return $this->homepageUrl;
+    }
+    
+    
+    
+    
+    /**
      * You cannot call the getters in this object until the values are populated, 
      * which happens when you call parse().
      * 
@@ -144,7 +208,8 @@ abstract class AbstractCourseParser implements Parser, CourseAttributes
      */
     protected function checkState()
     {
-        if (!$this->isParsed) {
+        if (!$this->isParsed)
+        {
             throw new IllegalStateException(sprintf(
                 "must call parse() before calling '%s::%s'"
               , __CLASS__

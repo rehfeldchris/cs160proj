@@ -31,7 +31,22 @@ interface CourseAttributes
     /**
      * @return string of plain text. no html, but may have line breaks.
      */
-    public function getCourseDescription();
+    public function getLongCourseDescription();
+    
+    /**
+     * @return string of plain text. no html, but may have line breaks. 
+     */
+    public function getShortCourseDescription();
+    
+    /**
+     * @return string url to a photo that showcases the course.
+     */
+    public function getCoursePhotoUrl();
+    
+    /**
+     * @return array of strings
+     */
+    public function getCategoryNames();
     
     /**
      * @return DateTime
@@ -57,4 +72,9 @@ interface CourseAttributes
      * @return string
      */
     public function getUniversityName();
+    
+    /**
+     * @return string
+     */
+    public function getHomepageUrl();
 }
