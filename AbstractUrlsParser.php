@@ -12,7 +12,7 @@ require_once 'IllegalStateException.php';
 
 abstract class AbstractUrlsParser implements Parser
 {
-    protected $urls, $isParsed;
+    protected $urls,$courseImages, $isParsed;
 	
 	/**
      * Tests if array is populated after parsing
@@ -34,6 +34,16 @@ abstract class AbstractUrlsParser implements Parser
     {
         $this->checkState();
         return $this->urls;
+    }
+	
+	/**
+	 * 
+     * @return string image url for a course
+     */
+    public function getCourseImage($url)
+    {
+        $this->checkState();
+        return $this->courseImages[$url];
     }
 	
 	/**
