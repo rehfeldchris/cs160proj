@@ -22,8 +22,8 @@ $edxUrls = $edx_urls_parser->getUrls();
 
 $repeat = 0;
 foreach ($edxUrls as $url) {
-	
-	$edxParser = $factory->create($url);
+	$extraInfo = array('shortCourseDescription' => $edx_urls_parser->getCourseShortDesc($url));
+	$edxParser = $factory->create($url, $extraInfo);
 	$edxParser->parse();
 	echo "Url: " . $url . "\n";
 	if ($edxParser->isValid()) {
