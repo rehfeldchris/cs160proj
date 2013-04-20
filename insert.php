@@ -1,8 +1,8 @@
 <?
 
 /**
- *insert.php craws all URLs of Edx and Coursera, and add all returned data
- *into the database.
+ *insert.php craws all URLs of Edx and Coursera, and adds all returned data
+ *into the course_data and coursedetails tables.
  *@author Manzoor Ahmed
  */
 
