@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  *insert.php craws all URLs of Edx and Coursera, and adds all returned data
