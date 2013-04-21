@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
  * Connection class to connect to the database
@@ -8,7 +8,7 @@
 //CONNECTION FOR LOCALHOST
 
 define('HOST','localhost');
-define('NAME','');
+define('NAME','root');
 define('PASSWORD','');       
 define('DATABASE','sjsucsor_160s1g1');  
 

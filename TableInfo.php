@@ -29,7 +29,7 @@ class TableInfo
 	function DisplayTable()
 	{
 		echo "<div>";
-		echo "<table border=1>";
+		echo "<table border=1 width=\"100%\" height=\"100%\">";
 		$columns=$this->columnList;
 		$rowsList=$this->rows;
 		echo "<tr>";
@@ -48,7 +48,11 @@ class TableInfo
 			foreach($row as $element)
 			{
 				$count++;
-				if(checkisImage($element))
+				if(checkisLink($element))
+				{
+					echo "<td><a href=\"$element\">Link</a></td>";
+				}
+				elseif(checkisImage($element))
 				{
 					echo "<td><img src=\"$element \" width=\"100\" height=\"100\"</td>";
 				}
@@ -93,6 +97,24 @@ class TableInfo
 			return true;
 			else return false;
 	}
+	function checkisLink($element)
+	{
+		if(findStr($element,"http:")||findStr($element,"https:"))
+		{
+			// check if it is image
+			if(checkisImage($element))
+			{
+				return false;
+			}
+			return true;
+			
+		}
+		else
+		{
+			return false;
+		}
+	}
+
 
 	$db=$GLOBALS['dbc'];
 	$que="Select * from course_data,coursedetails where coursedetails.id=course_data.id";
