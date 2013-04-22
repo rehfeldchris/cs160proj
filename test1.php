@@ -27,6 +27,7 @@ foreach ($edxUrls as $url) {
 	$edxParser->parse();
 	echo "Url: " . $url . "\n";
 	if ($edxParser->isValid()) {
+		echo "University Name: " . $edxParser->getUniversityName() . "\n";
 		echo "Name: " . $edxParser->getCourseName() . "\n";
 		echo "Duration: " . $edxParser->getDuration() . "\n";
 		echo "Image: " . $edx_urls_parser->getCourseImage($url) . "\n";

@@ -29,7 +29,7 @@ class TableInfo
 	function DisplayTable()
 	{
 		echo "<div>";
-		echo "<table border=1 width=\"100%\" height=\"100%\">";
+		echo "<table border=1 width=\"30%\" height=\"30%\">";
 		$columns=$this->columnList;
 		$rowsList=$this->rows;
 		echo "<tr>";
@@ -45,10 +45,14 @@ class TableInfo
 		{
 			
 			echo "<tr>";
+			$count=0;
 			foreach($row as $element)
 			{
-				$count++;
-				if(checkisLink($element))
+				if((strcmp($columns[$count],"long_desc"))===0)
+				{
+					echo "<td>$element</td>";
+				}
+				elseif(checkisLink($element))
 				{
 					echo "<td><a href=\"$element\">Link</a></td>";
 				}
@@ -58,8 +62,12 @@ class TableInfo
 				}
 				else
 				{
-					echo "<td>$element</td>";
+					
+					
+						echo "<td>$element</td>";
+					
 				}
+				$count++;
 				
 				
 				
@@ -92,14 +100,23 @@ class TableInfo
 	}
 	function checkisImage($element)
 	{
-		if(findStr($element,".png")||findStr($element,".jpeg")||
+		if(findstr($element,"<p>")||findstr($element,"<div>"))
+		{
+			return false;
+		}
+		elseif(findStr($element,".png")||findStr($element,".jpeg")||
 			findStr($element,".JPG")||findStr($element,".jpg")||findStr($element,".gif"))
 			return true;
 			else return false;
 	}
 	function checkisLink($element)
 	{
-		if(findStr($element,"http:")||findStr($element,"https:"))
+		if(findstr($element,"<p>")||findstr($element,"<div>"))
+		{
+			return false;
+		}
+	
+		else if(findStr($element,"http:")||findStr($element,"https:"))
 		{
 			// check if it is image
 			if(checkisImage($element))
@@ -117,7 +134,7 @@ class TableInfo
 
 
 	$db=$GLOBALS['dbc'];
-	$que="Select * from course_data,coursedetails where coursedetails.id=course_data.id";
+	$que="Select distinct * from course_data natural join coursedetails";
 		$result=$db->query($que) or die(mysqli_error($db));
 		$table =new TableInfo($result);
 		$table->DisplayTable();
