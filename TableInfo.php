@@ -29,7 +29,7 @@ class TableInfo
 	function DisplayTable()
 	{
 		echo "<div>";
-		echo "<table border=1 width=\"30%\" height=\"30%\">";
+		echo "<table border=1 width=\"100%\" height=\"100%\" style=\"background-color:00FF66\">";
 		$columns=$this->columnList;
 		$rowsList=$this->rows;
 		echo "<tr>";
