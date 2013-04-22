@@ -50,21 +50,21 @@ class TableInfo
 			{
 				if((strcmp($columns[$count],"long_desc"))===0)
 				{
-					echo "<td>$element</td>";
+					echo "<td width=\"%20\">$element</td>";
 				}
 				elseif(checkisLink($element))
 				{
-					echo "<td><a href=\"$element\">Link</a></td>";
+					echo "<td wdith=\"5%\"><a href=\"$element\">Course_Link</a></td>";
 				}
 				elseif(checkisImage($element))
 				{
-					echo "<td><img src=\"$element \" width=\"100\" height=\"100\"</td>";
+					echo "<td wdith=\"5%\"><img src=\"$element \" width=\"100\" height=\"100\"</td>";
 				}
 				else
 				{
 					
 					
-						echo "<td>$element</td>";
+						echo "<td width=\"5%\">$element</td>";
 					
 				}
 				$count++;
