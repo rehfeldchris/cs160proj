@@ -116,7 +116,7 @@ class EdxCourseParser extends AbstractCourseParser
         
         //university name
         $this->universityName = pq('hgroup h1 a')->slice(0, 1)->text();
-        $this->universityName = EdxUniversityNameConverter::convert($this->universityName);
+//        $this->universityName = EdxUniversityNameConverter::convert($this->universityName);
 		
         //course name
         $this->courseName = pq('hgroup h1')->clone()->children()->remove()->end()->text();
