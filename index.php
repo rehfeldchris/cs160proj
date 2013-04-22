@@ -13,7 +13,7 @@
 require_once('connection.php');
 
 $dbc = $GLOBALS['dbc'];
-//just noticed, this is wrong query....
+
 $query1 = "SELECT * FROM `sjsucsor_160s1g1`.`coursedetails` first_t, 
 						 `sjsucsor_160s1g1`. `course_data` second_t
 						  WHERE first_t.id = second_t.id
