@@ -60,16 +60,16 @@ foreach ($siteurl as $url) {
 	$long_desc =mysql_real_escape_string($p->getLongCourseDescription());				  
 	$course_link =mysql_real_escape_string($p->getHomepageUrl());			  
 	$video_link ="NA";				 
-	$start_date = $p->getStartDate();						 
+	//$start_date = $p->getStartDate();						 
 	$course_length = $p->getDuration();	     
 	$course_image = mysql_real_escape_string($p->getCoursePhotoUrl());						 
 	$getcategories =$p->getCategoryNames();	
 	$course_date = $p->getStartDate();
 	if ($course_date) {
 		$course_date = $course_date->format('Y-m-d 00:00:00');
-	} else {
-		$course_date = "Date to be announced";
-	}
+	} /*else {
+		$course_date = "Date to be announced"; // this is not necessary
+	}*/
 	$site = $p->getUniversityName();	
 	$category = "";
 	
