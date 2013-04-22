@@ -1,11 +1,15 @@
 <html>
 <head><title>KaZOOM</title>
 <meta name="Author" content="Manzoor Ahmed">
-<!--My version of the output-->
+<!--My version of the output--> // 
+
 </head>
 <body>
 
+
 <?php
+
+// your table missing the long description that's why it looks so nice
 require_once('connection.php');
 
 $dbc = $GLOBALS['dbc'];
@@ -33,6 +37,9 @@ echo '<table width="100%" border="0" style="background-color:#D8E7F0">';
 			    </tr>';
 	}
 echo '</table>';
+
+require_once("TableInfo.php");
+
 ?>
 </body>
 </html>
