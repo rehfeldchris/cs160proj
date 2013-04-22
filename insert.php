@@ -65,6 +65,11 @@ foreach ($siteurl as $url) {
 	$course_image = mysql_real_escape_string($p->getCoursePhotoUrl());						 
 	$getcategories =$p->getCategoryNames();	
 	$course_date = $p->getStartDate();
+	if ($course_date) {
+		$course_date = $course_date->format('Y-m-d 00:00:00');
+	} else {
+		$course_date = "Date to be announced";
+	}
 	$site = $p->getUniversityName();	
 	$category = "";
 	
@@ -87,7 +92,7 @@ foreach ($siteurl as $url) {
 		//insert to course_data first STILL NEED TO ADD RETURNED DATEO BJECT..
 		$que ="INSERT INTO `sjsucsor_160s1g1`.`course_data` (`id`, `title`, `short_desc`, `long_desc`, `course_link`, `video_link`, 
 				`start_date`, `course_length`, `course_image`, 			`category`, `site`)
-		 	  VALUES ('0', '$title', '$short_desc', '$long_desc', '$course_link', 'video', 'course_date', '$course_length', '$course_image', '$category', '$site');";
+		 	  VALUES ('0', '$title', '$short_desc', '$long_desc', '$course_link', 'video', '$course_date', '$course_length', '$course_image', '$category', '$site');";
 		
 		$dbc = $GLOBALS['dbc'];
 		//run query

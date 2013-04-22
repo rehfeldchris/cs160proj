@@ -101,7 +101,10 @@ class CourseraCourseParser extends AbstractCourseParser
         
         
         //start date
-        $course = $generalObj->courses[0];
+        //$course = $generalObj->courses[0];
+		foreach($generalObj->courses as $course) {
+			if ($course->status) break;
+		}
         if ($course->start_date_string)
         {
             $this->startDate = DateTime::createFromFormat('j F Y', trim($course->start_date_string));
