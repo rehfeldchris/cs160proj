@@ -11,6 +11,7 @@
 
 require_once 'AbstractCourseParser.php';
 require_once 'phpQuery-onefile.php';
+require_once 'EdxUniversityNameConverter.php';
 
 class EdxCourseParser extends AbstractCourseParser
 {
@@ -115,10 +116,11 @@ class EdxCourseParser extends AbstractCourseParser
         
         //university name
         $this->universityName = pq('hgroup h1 a')->slice(0, 1)->text();
-        
+        $this->universityName = EdxUniversityNameConverter::convert($this->universityName);
+		
         //course name
         $this->courseName = pq('hgroup h1')->clone()->children()->remove()->end()->text();
-        
+		
         //workload
         $effort = pq('p:contains("Estimated Effort")')->next('.start-date')->slice(0, 1)->text();
         if ($effort && preg_match('~\d+~', $effort, $matches))
