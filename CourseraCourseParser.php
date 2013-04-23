@@ -52,21 +52,15 @@ class CourseraCourseParser extends AbstractCourseParser
         $this->isParsed = true;
         
         $generalObj = json_decode($this->generalJsonText);
-        $err = json_last_error();
-        //a common error is not being utf8 encoded, 
-        //but this also catches syntax and other errors
-        if ($err !== JSON_ERROR_NONE)
+        if (!$generalObj)
         {
-            throw new RuntimeException("json parsing failed, error code $err");
+            throw new RuntimeException("json parsing failed for generalJsonText");
         }
         
         $instructorObj = json_decode($this->instructorJsonText);
-        $err = json_last_error();
-        //a common error is not being utf8 encoded, 
-        //but this also catches syntax and other errors
-        if ($err !== JSON_ERROR_NONE)
+        if (!$instructorObj)
         {
-            throw new RuntimeException("json parsing failed, error code $err");
+            throw new RuntimeException("json parsing failed for instructorJsonText");
         }
         
         //course description
@@ -101,21 +95,53 @@ class CourseraCourseParser extends AbstractCourseParser
         
         
         //start date
-        //$course = $generalObj->courses[0];
-		foreach($generalObj->courses as $course) {
-			if ($course->status) break;
+        //we try to pick the "active" course, but, default to the first in the list
+        //because sometimes there is no course marked as active
+        $course = $generalObj->courses[0];
+		foreach($generalObj->courses as $potentialActiveCourse) {
+			if ($potentialActiveCourse->status)
+            {
+                $course = $potentialActiveCourse;
+                break;
+            }
 		}
+
         if ($course->start_date_string)
         {
-            $this->startDate = DateTime::createFromFormat('j F Y', trim($course->start_date_string));
+            // remove commas
+            $date_str = trim(str_replace(',', '', $course->start_date_string));
+            
+            //sometimes they omit the start day, detect this and adjust format(j means days)
+            $format = preg_match('~^\d+ \S+ \d+$~', $date_str) ? 'j F Y' : 'F Y';
+            $this->startDate = DateTime::createFromFormat($format, $date_str);
+
+            // if we still failed...this is an unknown date format
+            if (!$this->startDate)
+            {
+                throw new CourseParsingException("Unknown date format. start_date_string='{$course->start_date_string}'");
+            }
+            
         }
-        else 
+        elseif ($course->start_year && $course->start_month)
         {
-            $this->startDate = DateTime::createFromFormat('Y n d', "{$course->start_year} {$course->start_month} {$course->start_day}");
+            //sometimes they omit the start day, assume first of the month
+            $day = $course->start_day ? $course->start_day : 1;
+            $this->startDate = DateTime::createFromFormat('Y n d', "{$course->start_year} {$course->start_month} $day");
+            // if we still failed...this is an unknown date format
+            if (!$this->startDate)
+            {
+                throw new CourseParsingException("Unexpected date values. y:m:d = {$course->start_year}:{$course->start_month}:{$course->start_day}");
+            }
         }
+        else
+        {
+            //we assume this case is that the date is simply unspecified/"to be determined"
+            $this->startDate = null;
+        }
+
         
         //duration
-        if (preg_match('~(\d+) weeks~', $generalObj->courses[0]->duration_string, $matches))
+        if (preg_match('~(\d+) weeks~', $course->duration_string, $matches))
         {
             //convert weeks to days
             $this->duration = $matches[1] * 7;
@@ -138,7 +164,11 @@ class CourseraCourseParser extends AbstractCourseParser
                   ? "{$prof->first_name} {$prof->middle_name} {$prof->last_name}"
                   : "{$prof->first_name} {$prof->last_name}";
             $image = $prof->photo;
-            $staff[] = compact('name', 'image');
+            //sometimes theres blank entries where the name is just whitespace. skip.
+            if (strlen(trim($name)))
+            {
+                $staff[] = compact('name', 'image');
+            }
         }
         $this->otherProfessors = $staff;
         $this->primaryProfessor = $staff[0];

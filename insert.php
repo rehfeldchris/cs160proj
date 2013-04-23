@@ -14,8 +14,8 @@ require_once 'emptyTables.php';
 require_once 'CourseraUrlsParser.php';
 require_once 'EdxUrlsParser.php';
 
-//set crawling time for 5 min, report all errors
-set_time_limit(500);   
+//set crawling time for 10 min, report all errors
+set_time_limit(1200);   
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -32,27 +32,65 @@ $edx_urls_parser = new EdxUrlsParser();
 $edx_urls_parser->parse();
 $edxUrls = $edx_urls_parser->getUrls();
 
+
+
+
+
+//clean tables before every crawl
+cleanTables();
+//insert to coursedetails
+foreach ($courseraUrls as $url) {
+    insertCourseDetails($url);
+}
+foreach ($edxUrls as $url) {
+    $extraInfo = array('shortCourseDescription' => $edx_urls_parser->getCourseShortDesc($url));
+    insertCourseDetails($url, $extraInfo);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
  * insertCourseDetails, adds primary professors to coursedetails database
  * @param $siteurl, array of site links
  **/
 
-function insertCourseDetails($siteurl){
+function insertCourseDetails($url, $extraInfo = array()){
 
-$factory = new ParserFactory();    
+    $factory = new ParserFactory();    
 
-//for each page, get all requested information
-foreach ($siteurl as $url) {
+    echo "$url\n";
+
     
 	try {
-		$p = $factory->create($url);  
+		$p = $factory->create($url, $extraInfo);
+        $p->parse();
 	} catch (Exception $e) {
-		continue;
+        //these really should be logged....but print to stdout for now
+        echo "parsing failure for $url\n";
+        echo $e->getMessage(), "\n", $e->getTraceAsString();
+		return false;
 	}
-	
-    $p->parse(); 
+
     if (!$p->isValid()){
-		
+        echo "invalid parser for $url\n";
+		return false;
     }
 	
 	//to store primary professors	
@@ -121,14 +159,9 @@ foreach ($siteurl as $url) {
 			//run query		                   
 			$dbc->query($sql) or die(mysqli_error());
 		}//end foreach
-	}//end outter foreach
+
 }//end function
 
-//clean tables before every crawl
-cleanTables();
-//insert to coursedetails
-insertCourseDetails($courseraUrls);
-//insert to course_data 
-insertCourseDetails($edxUrls);
+
 exit;
 ?>

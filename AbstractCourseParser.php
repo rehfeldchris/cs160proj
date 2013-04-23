@@ -61,7 +61,6 @@ abstract class AbstractCourseParser implements Parser, CourseAttributes
             && strlen($this->universityName) > 0
             && strlen($this->universityName) < 150
             && $this->duration < 365
-            && $this->startDate
             && strlen($this->coursePhotoUrl) > 0
             && parse_url($this->coursePhotoUrl)
             && (!$this->courseVideoUrl || parse_url($this->courseVideoUrl))
@@ -130,6 +129,8 @@ abstract class AbstractCourseParser implements Parser, CourseAttributes
     }
     
     /**
+     * This can be null for cases like "to be announced"
+     * 
      * @return DateTime
      */
     public function getStartDate()
