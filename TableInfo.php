@@ -4,6 +4,7 @@ require_once "connection.php";
 	
 	
 	
+	function printTable()
 	{
 		$db=$GLOBALS['dbc'];
 		$que="Select distinct * from course_data natural join coursedetails";
@@ -34,14 +35,9 @@ require_once "connection.php";
 			</tr>";
 			
 			
-		}
-		
-		
+		}		
 		echo "</tr>";
 		echo "</table>";
 	}
-
-
-	
 		printTable();
 ?>
