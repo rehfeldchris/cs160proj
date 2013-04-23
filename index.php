@@ -1,7 +1,7 @@
 <html>
 <head><title>KaZOOM</title>
 <meta name="Author" content="Manzoor Ahmed">
-<!--My version of the output--> // 
+<!--My version of the output--> 
 
 </head>
 <body>
