@@ -77,4 +77,9 @@ interface CourseAttributes
      * @return string
      */
     public function getHomepageUrl();
+    
+    /**
+     * @return string
+     */
+    public function getVideoUrl();
 }

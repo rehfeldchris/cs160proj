@@ -44,7 +44,7 @@ abstract class AbstractCourseParser implements Parser, CourseAttributes
      * An invalid parser requires immediate investigation, 
      * because it's likely caused by the remote website changing their data format.
      * 
-     * @return type boolean
+     * @return boolean
      */
     public function isValid()
     {
@@ -107,7 +107,7 @@ abstract class AbstractCourseParser implements Parser, CourseAttributes
     }
     
     /**
-     * An small part of the ful course description,
+     * An small part of the full course description,
      * 
      * @return string
      */
@@ -198,8 +198,16 @@ abstract class AbstractCourseParser implements Parser, CourseAttributes
         return $this->homepageUrl;
     }
     
-    
-    
+    /**
+     * Returns a url to a youtube video
+     * 
+     * @return string
+     */
+    public function getVideoUrl()
+    {
+        $this->checkState();
+        return $this->courseVideoUrl; 
+    }
     
     /**
      * You cannot call the getters in this object until the values are populated, 

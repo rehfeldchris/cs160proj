@@ -103,7 +103,7 @@ function insertCourseDetails($url, $extraInfo = array()){
 	$long_desc = $dbc->real_escape_string($p->getLongCourseDescription());				  
 	$course_link = $dbc->real_escape_string($p->getHomepageUrl());			  
     //dummy video val for now, parser needs updating
-	$video_link = $dbc->real_escape_string('video');
+	$video_link = $dbc->real_escape_string($p->getVideoUrl());
 				 
 	$course_length = $p->getDuration();	     
 	$course_image = $dbc->real_escape_string($p->getCoursePhotoUrl());						 
