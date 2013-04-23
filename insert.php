@@ -72,7 +72,9 @@ foreach ($edxUrls as $url) {
  **/
 
 function insertCourseDetails($url, $extraInfo = array()){
-
+    //mysqli db connection
+    $dbc = $GLOBALS['dbc'];
+    
     $factory = new ParserFactory();    
 
     echo "$url\n";
@@ -94,18 +96,17 @@ function insertCourseDetails($url, $extraInfo = array()){
     }
 	
 	//to store primary professors	
-	$prim_prof = array(); 	
-	
-	$id;
 	$prim_prof = $p->getProfessors();
-	$title = mysql_real_escape_string($p->getCourseName());	//$dbc->mysqli_real_escape_string does not work		  
-	$short_desc = mysql_real_escape_string($p->getShortCourseDescription());  
-	$long_desc =mysql_real_escape_string($p->getLongCourseDescription());				  
-	$course_link =mysql_real_escape_string($p->getHomepageUrl());			  
-	$video_link ="NA";				 
-	//$start_date = $p->getStartDate();						 
+	$title = $dbc->real_escape_string($p->getCourseName());	
+    $title = $dbc->real_escape_string($p->getCourseName());
+	$short_desc = $dbc->real_escape_string($p->getShortCourseDescription());  
+	$long_desc = $dbc->real_escape_string($p->getLongCourseDescription());				  
+	$course_link = $dbc->real_escape_string($p->getHomepageUrl());			  
+    //dummy video val for now, parser needs updating
+	$video_link = $dbc->real_escape_string('video');
+				 
 	$course_length = $p->getDuration();	     
-	$course_image = mysql_real_escape_string($p->getCoursePhotoUrl());						 
+	$course_image = $dbc->real_escape_string($p->getCoursePhotoUrl());						 
 	$getcategories =$p->getCategoryNames();	
 	$course_date = $p->getStartDate();
 	if ($course_date) {
@@ -113,31 +114,17 @@ function insertCourseDetails($url, $extraInfo = array()){
 	} /*else {
 		$course_date = "Date to be announced"; // this is not necessary
 	}*/
-	$site = $p->getUniversityName();	
-	$category = "";
+	$site = $dbc->real_escape_string($p->getUniversityName());	
+
+        
+    $category = $dbc->real_escape_string(join(',', $p->getCategoryNames()));
 	
-		//collect all gategoires, and build string
-		for($start =0; $start != count($getcategories); $start++){
-				//if only one element, don't add ','
-				if(count($getcategories) == 1 ){
-					$category.=$getcategories[$start];
-				}
-				//if last element, don't add ','
-				else if($start+1 == count($getcategories)){
-					$category.=$getcategories[$start];
-				}
-				//need to separate by ','
-				else{
-					$category.=$getcategories[$start]." ,";
-				}
-		}
-	
-		//insert to course_data first STILL NEED TO ADD RETURNED DATEO BJECT..
+		//insert to course_data first 
 		$que ="INSERT INTO `sjsucsor_160s1g1`.`course_data` (`id`, `title`, `short_desc`, `long_desc`, `course_link`, `video_link`, 
 				`start_date`, `course_length`, `course_image`, 			`category`, `site`)
-		 	  VALUES ('0', '$title', '$short_desc', '$long_desc', '$course_link', 'video', '$course_date', '$course_length', '$course_image', '$category', '$site');";
+		 	  VALUES ('0', '$title', '$short_desc', '$long_desc', '$course_link', '$video_link', '$course_date', '$course_length', '$course_image', '$category', '$site');";
 		
-		$dbc = $GLOBALS['dbc'];
+		
 		//run query
 		$dbc->query($que) or die(mysqli_error($dbc));
 		//get the last auto generated id, needed for insert to the next table
@@ -148,8 +135,8 @@ function insertCourseDetails($url, $extraInfo = array()){
 		foreach($prim_prof as $row){ 
 			
 			//get the profesor's name and image 
-			$name = mysql_real_escape_string($row['name']); 
-			$image= mysql_real_escape_string($row['image']); 
+			$name = $dbc->real_escape_string($row['name']); 
+			$image= $dbc->real_escape_string($row['image']); 
 			
 			//prepare query for inserting to coursedetails table	  											 
 		    $sql = "INSERT INTO `sjsucsor_160s1g1`.`coursedetails`(`id`, `profname`, `profimage`)
