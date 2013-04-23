@@ -44,7 +44,12 @@ $factory = new ParserFactory();
 //for each page, get all requested information
 foreach ($siteurl as $url) {
     
-	$p = $factory->create($url);  
+	try {
+		$p = $factory->create($url);  
+	} catch (Exception $e) {
+		continue;
+	}
+	
     $p->parse(); 
     if (!$p->isValid()){
 		
