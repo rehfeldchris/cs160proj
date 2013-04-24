@@ -45,7 +45,9 @@ foreach ($edxUrls as $url) {
 
 /**
  * insertCourseDetails, adds primary professors to coursedetails database
- * @param $siteurl, array of site links
+ * @param $url, array of site links
+ * @param $extraInfo, extra information [Optional]
+ * @param $website, the site name where the $url is being passed by
  **/
 
 function insertCourseDetails($url, $extraInfo = array(),$website="Coursera"){
@@ -56,10 +58,9 @@ function insertCourseDetails($url, $extraInfo = array(),$website="Coursera"){
 
     echo "$url\n";
 
-    
 	try {
 		$p = $factory->create($url, $extraInfo);
-        $p->parse();
+        	$p->parse();
 	} catch (Exception $e) {
         //these really should be logged....but print to stdout for now
         echo "parsing failure for $url\n";
@@ -69,9 +70,8 @@ function insertCourseDetails($url, $extraInfo = array(),$website="Coursera"){
 
     if (!$p->isValid()){
         echo "invalid parser for $url\n";
-		return false;
+	return false;
     }
-
 	
 	//to store primary professors	
 	$prim_prof = $p->getProfessors();
