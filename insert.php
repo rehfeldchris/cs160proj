@@ -127,7 +127,7 @@ function insertCourseDetails($url, $extraInfo = array()){
 		
 		
 		//run query
-		$dbc->query($que) or die(mysqli_error($dbc));
+		$dbc->query($que) or die($dbc->error);
 		//get the last auto generated id, needed for insert to the next table
 		$id =mysqli_insert_id($dbc);  
 		
@@ -142,10 +142,10 @@ function insertCourseDetails($url, $extraInfo = array()){
 			//prepare query for inserting to coursedetails table	  											 
 		    $sql = "INSERT INTO `sjsucsor_160s1g1`.`coursedetails`(`id`, `profname`, `profimage`)
 					VALUES 
-					( '$id', '$name', '$image');" or die(mysqli_error());	  
+					( '$id', '$name', '$image');" or die($dbc->error);	  
 			
 			//run query		                   
-			$dbc->query($sql) or die(mysqli_error());
+			$dbc->query($sql) or die($dbc->error);
 		}//end foreach
 
 }//end function

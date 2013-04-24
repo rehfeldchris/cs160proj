@@ -14,15 +14,15 @@ require_once 'connection.php';
  */
 function cleanTables(){
 
-//prepare queries for cleaning tables
-$drop1 ="TRUNCATE TABLE `sjsucsor_160s1g1`.`coursedetails`" or die(mysqli_error());
-$drop2 ="TRUNCATE TABLE `sjsucsor_160s1g1`.`course_data`" or die(mysqli_error());
+    //prepare queries for cleaning tables
+    $drop1 ="delete from `sjsucsor_160s1g1`.`coursedetails`";
+    $drop2 ="delete from  `sjsucsor_160s1g1`.`course_data`";
 
-$dbc=$GLOBALS['dbc'];
-//clean coursedetails table
-$dbc->query($drop1) or die (mysqli_error());
-//clean course_data table
-$dbc->query($drop2) or die (mysqli_error());
+    $dbc=$GLOBALS['dbc'];
+    //clean coursedetails table
+    $dbc->query($drop1) or die ($dbc->error);
+    //clean course_data table
+    $dbc->query($drop2) or die ($dbc->error);
 
 }
 
