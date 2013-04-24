@@ -158,9 +158,9 @@ class CourseraCourseParser extends AbstractCourseParser
         //calc end date, if possible
         if ($this->startDate && $this->duration)
         {
-            $d = clone $this->startDate;
-            $d->add(new DateInterval("P{$this->duration}D"));
-            $this->endDate = $d;
+            //add the duration in seconds
+            $endTimestamp = $this->startDate->format('U') + ($this->duration * 60 * 60 * 24 * 7);
+            $this->endDate = new Datetime("@$endTimestamp");
         }
         
         

@@ -89,7 +89,7 @@ class EdxCourseParser extends AbstractCourseParser
         if ($this->startDate && $this->endDate)
         {
             // divide diff by seconds per day
-            $diffDays = ($this->endDate->getTimeStamp() / $this->startDate->getTimestamp()) / (60 * 60 * 24);
+            $diffDays = ($this->endDate->format('U') / $this->startDate->format('U')) / (60 * 60 * 24);
             $this->duration = ceil($diffDays / 7);
         }
         
