@@ -25,9 +25,11 @@ class ParserFactory
      */
     public function create($url, $extraInfo = array()) 
     {
+        // this should only be set to true during development, never during production. it will give stale results.
+        $useCachedHttpResponses = true;
         if (false !== stripos($url, 'edx.org/'))
         {
-            return new EdxCourseParser($url, file_get_contents($url), $extraInfo['shortCourseDescription']);
+            return new EdxCourseParser($url, UrlFetcher::fetch($url, $useCachedHttpResponses), $extraInfo['shortCourseDescription']);
         }
         elseif (false !== stripos($url, 'coursera.org/'))
         {
@@ -45,8 +47,8 @@ class ParserFactory
             $courseShortName = $parts[2];
             $generalJsonUrl = 'https://www.coursera.org/maestro/api/topic/information?topic-id=' . rawurlencode($courseShortName);
             $instructorJsonUrl = 'https://www.coursera.org/maestro/api/user/instructorprofile?excelude_topics=1&topic_short_name=' . rawurlencode($courseShortName);
-            $genJson = file_get_contents($generalJsonUrl);
-            $instructorJson = file_get_contents($instructorJsonUrl);
+            $genJson = UrlFetcher::fetch($generalJsonUrl, $useCachedHttpResponses);
+            $instructorJson = UrlFetcher::fetch($instructorJsonUrl, $useCachedHttpResponses);
             return new CourseraCourseParser($url, $genJson, $instructorJson);
         }
         else
