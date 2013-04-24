@@ -13,6 +13,7 @@ require_once 'ParserFactory.php';
 require_once 'emptyTables.php';
 require_once 'CourseraUrlsParser.php';
 require_once 'EdxUrlsParser.php';
+require_once 'UrlFetcher.php';
 
 //set crawling time for 10 min, report all errors
 set_time_limit(1200);   
@@ -94,6 +95,7 @@ function insertCourseDetails($url, $extraInfo = array()){
         echo "invalid parser for $url\n";
 		return false;
     }
+    return;
 	
 	//to store primary professors	
 	$prim_prof = $p->getProfessors();
@@ -102,7 +104,6 @@ function insertCourseDetails($url, $extraInfo = array()){
 	$short_desc = $dbc->real_escape_string($p->getShortCourseDescription());  
 	$long_desc = $dbc->real_escape_string($p->getLongCourseDescription());				  
 	$course_link = $dbc->real_escape_string($p->getHomepageUrl());			  
-    //dummy video val for now, parser needs updating
 	$video_link = $dbc->real_escape_string($p->getVideoUrl());
 				 
 	$course_length = $p->getDuration();	     
