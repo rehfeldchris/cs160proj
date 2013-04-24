@@ -76,7 +76,7 @@ class EdxCourseParser extends AbstractCourseParser
         //calc duration, if possible
         if ($this->startDate && $this->endDate)
         {
-            $this->duration = (int) $this->startDate->diff($this->endDate)->format('%a');
+            $this->duration = ceil($this->startDate->diff($this->endDate)->format('%a') / 7);
         }
         
         //staff/professors

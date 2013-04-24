@@ -149,7 +149,7 @@ abstract class AbstractCourseParser implements Parser, CourseAttributes
     }
     
     /**
-     * @return int days
+     * @return int weeks, rounded up to the next whole week
      */
     public function getDuration()
     {

@@ -152,7 +152,7 @@ class CourseraCourseParser extends AbstractCourseParser
         if (preg_match('~(\d+) weeks~', $course->duration_string, $matches))
         {
             //convert weeks to days
-            $this->duration = $matches[1] * 7;
+            $this->duration = $matches[1];
         }
         
         //calc end date, if possible

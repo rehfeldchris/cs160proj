@@ -59,7 +59,7 @@ interface CourseAttributes
     public function getEndDate();
     
     /**
-     * @return int days
+     * @return int weeks, rounded up to the next whole week
      */
     public function getDuration();
     
