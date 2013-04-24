@@ -23,7 +23,5 @@ function cleanTables(){
     $dbc->query($drop1) or die ($dbc->error);
     //clean course_data table
     $dbc->query($drop2) or die ($dbc->error);
-
 }
-
 ?>
