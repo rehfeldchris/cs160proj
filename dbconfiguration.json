@@ -6,9 +6,9 @@
       "Host":"localhost"
    },
    "Remotedbs":{
-      "User":"sec1group1@sjsu-cs.org",
+      "User":"sjsucsor_160s1g1",
       "Password":"cs160group1",
       "Database":"sjsucsor_160s1g12013s",
-      "Host":"cs160.sjsu-cs.org"
+      "Host":"localhost"
    }
 }
