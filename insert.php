@@ -117,7 +117,7 @@ function insertCourseDetails($url, $extraInfo = array()){
 	$site = $dbc->real_escape_string($p->getUniversityName());	
 
         
-    $category = $dbc->real_escape_string(join(',', $p->getCategoryNames()));
+    $category = $dbc->real_escape_string(join(', ', $p->getCategoryNames()));
 	
 		//insert to course_data first 
 		$que ="INSERT INTO `sjsucsor_160s1g1`.`course_data` (`id`, `title`, `short_desc`, `long_desc`, `course_link`, `video_link`, 
