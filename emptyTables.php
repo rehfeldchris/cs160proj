@@ -15,8 +15,8 @@ require_once 'connection.php';
 function cleanTables(){
 
     //prepare queries for cleaning tables
-    $drop1 ="delete from `sjsucsor_160s1g1`.`coursedetails`";
-    $drop2 ="delete from  `sjsucsor_160s1g1`.`course_data`";
+    $drop1 ="delete from `coursedetails`";
+    $drop2 ="delete from `course_data`";
 
     $dbc=$GLOBALS['dbc'];
     //clean coursedetails table

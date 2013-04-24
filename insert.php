@@ -97,7 +97,7 @@ function insertCourseDetails($url, $extraInfo = array(),$website="Coursera"){
     $category = $dbc->real_escape_string(join(', ', $p->getCategoryNames()));
 	
 		//insert to course_data first 
-		$que ="INSERT INTO `sjsucsor_160s1g1`.`course_data` (`id`, `title`, `short_desc`, `long_desc`, `course_link`, `video_link`, 
+		$que ="INSERT INTO `course_data` (`id`, `title`, `short_desc`, `long_desc`, `course_link`, `video_link`, 
 				`start_date`, `course_length`, `course_image`, 			`category`, `site`)
 		 	  VALUES ('0', '$title', '$short_desc', '$long_desc', '$course_link', '$video_link', '$course_date', '$course_length', '$course_image', '$category', '$website');";
 		
@@ -116,7 +116,7 @@ function insertCourseDetails($url, $extraInfo = array(),$website="Coursera"){
 			$image= $dbc->real_escape_string($row['image']); 
 			
 			//prepare query for inserting to coursedetails table	  											 
-		    $sql = "INSERT INTO `sjsucsor_160s1g1`.`coursedetails`(`id`, `profname`, `profimage`)
+		    $sql = "INSERT INTO `coursedetails`(`id`, `profname`, `profimage`)
 					VALUES 
 					( '$id', '$name', '$image');" or die($dbc->error);	  
 			
