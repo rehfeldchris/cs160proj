@@ -95,7 +95,7 @@ function insertCourseDetails($url, $extraInfo = array()){
         echo "invalid parser for $url\n";
 		return false;
     }
-    return;
+
 	
 	//to store primary professors	
 	$prim_prof = $p->getProfessors();
