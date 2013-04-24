@@ -45,7 +45,7 @@ foreach ($courseraUrls as $url) {
 }
 foreach ($edxUrls as $url) {
     $extraInfo = array('shortCourseDescription' => $edx_urls_parser->getCourseShortDesc($url));
-    insertCourseDetails($url, $extraInfo);
+    insertCourseDetails($url, $extraInfo,"Edx");
 }
 
 
@@ -72,7 +72,7 @@ foreach ($edxUrls as $url) {
  * @param $siteurl, array of site links
  **/
 
-function insertCourseDetails($url, $extraInfo = array()){
+function insertCourseDetails($url, $extraInfo = array(),$website="Coursera"){
     //mysqli db connection
     $dbc = $GLOBALS['dbc'];
     
@@ -123,7 +123,7 @@ function insertCourseDetails($url, $extraInfo = array()){
 		//insert to course_data first 
 		$que ="INSERT INTO `sjsucsor_160s1g1`.`course_data` (`id`, `title`, `short_desc`, `long_desc`, `course_link`, `video_link`, 
 				`start_date`, `course_length`, `course_image`, 			`category`, `site`)
-		 	  VALUES ('0', '$title', '$short_desc', '$long_desc', '$course_link', '$video_link', '$course_date', '$course_length', '$course_image', '$category', '$site');";
+		 	  VALUES ('0', '$title', '$short_desc', '$long_desc', '$course_link', '$video_link', '$course_date', '$course_length', '$course_image', '$category', '$website');";
 		
 		
 		//run query
