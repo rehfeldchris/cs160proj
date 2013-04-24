@@ -32,10 +32,6 @@ $edx_urls_parser = new EdxUrlsParser();
 $edx_urls_parser->parse();
 $edxUrls = $edx_urls_parser->getUrls();
 
-
-
-
-
 //clean tables before every crawl
 cleanTables();
 //insert to coursedetails
@@ -46,25 +42,6 @@ foreach ($edxUrls as $url) {
     $extraInfo = array('shortCourseDescription' => $edx_urls_parser->getCourseShortDesc($url));
     insertCourseDetails($url, $extraInfo,"Edx");
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /**
  * insertCourseDetails, adds primary professors to coursedetails database
@@ -99,7 +76,7 @@ function insertCourseDetails($url, $extraInfo = array(),$website="Coursera"){
 	//to store primary professors	
 	$prim_prof = $p->getProfessors();
 	$title = $dbc->real_escape_string($p->getCourseName());	
-    $title = $dbc->real_escape_string($p->getCourseName());
+    	$title = $dbc->real_escape_string($p->getCourseName());
 	$short_desc = $dbc->real_escape_string($p->getShortCourseDescription());  
 	$long_desc = $dbc->real_escape_string($p->getLongCourseDescription());				  
 	$course_link = $dbc->real_escape_string($p->getHomepageUrl());			  
