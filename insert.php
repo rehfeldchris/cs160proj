@@ -13,7 +13,6 @@ require_once 'ParserFactory.php';
 require_once 'emptyTables.php';
 require_once 'CourseraUrlsParser.php';
 require_once 'EdxUrlsParser.php';
-require_once 'UrlFetcher.php';
 
 //set crawling time for 10 min, report all errors
 set_time_limit(1200);   

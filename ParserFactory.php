@@ -11,7 +11,7 @@
  
 require_once 'EdxCourseParser.php';
 require_once 'CourseraCourseParser.php';
-
+require_once 'UrlFetcher.php';
 
 class ParserFactory
 {
