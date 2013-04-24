@@ -26,6 +26,7 @@ require_once "connection.php";
 			$teacher=$row['profname'];
 			$teacherImage=$row['profimage'];
 			$courseLink=$row['course_link'];
+			$site=$row['site'];
 			echo "<tr>
 			<td width=\"5%\"><img src=\"$courseImage\" width=\"200px\" height=\"100px\"></td>
 			<td width=\"5%\"><a href=\"$courseLink\">$title</td>
@@ -34,6 +35,7 @@ require_once "connection.php";
 			<td width=\"5%\">$duration</td>
 			<td width=\"5%\">$teacher</td>
 			<td width=\"5%\"><img src=\"$teacherImage\" width=\"100px\" height=\"100px\"></td>
+			<td width=\"5%\">$site</td>
 			</tr>";
 			
 			
