@@ -56,27 +56,41 @@ class EdxCourseParser extends AbstractCourseParser
         //course start date
         $start = pq('.start-date')->slice(0, 1)->text();
         //format in html is usally Sep 15, 2013
-        $this->startDate = DateTime::createFromFormat('M j, Y', trim($start));
         //but sometimes just Sept, 2013
-        if (!$this->startDate) 
+        $dateStr = trim(str_replace(',', '', $start));
+        if (preg_match('~^\w+(\d{1,2} )? \d{2,4}$~', $dateStr))
         {
-            $this->startDate = DateTime::createFromFormat('M, Y', trim($start));
+            $ts = '@' . strtotime($dateStr);
+            $this->startDate = date_create($ts);
+            // if we still failed...this is an unknown date format
+            if (!$this->startDate)
+            {
+                throw new CourseParsingException("Unknown date format. date_str='{$dateStr}'");
+            }
         }
         
         //course end date
         $end = pq('.final-date')->slice(0, 1)->text();
         //format in html is usally Sep 15, 2013
-        $this->endDate = DateTime::createFromFormat('M j, Y', trim($end));
         //but sometimes just Sept, 2013
-        if (!$this->endDate)
+        $dateStr = trim(str_replace(',', '', $start));
+        if (preg_match('~^\w+(\d{1,2} )? \d{2,4}$~', $dateStr))
         {
-            $this->endDate = DateTime::createFromFormat('M, Y', trim($end));
+            $ts = '@' . strtotime($dateStr);
+            $this->endDate = date_create($ts);
+            // if we still failed...this is an unknown date format
+            if (!$this->endDate)
+            {
+                throw new CourseParsingException("Unknown date format. date_str='{$dateStr}'");
+            }
         }
         
         //calc duration, if possible
         if ($this->startDate && $this->endDate)
         {
-            $this->duration = ceil($this->startDate->diff($this->endDate)->format('%a') / 7);
+            // divide diff by seconds per day
+            $diffDays = ($this->endDate->getTimeStamp() / $this->startDate->getTimestamp()) / (60 * 60 * 24);
+            $this->duration = ceil($diffDays / 7);
         }
         
         //staff/professors
