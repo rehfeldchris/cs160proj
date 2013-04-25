@@ -20,7 +20,20 @@ require_once "connection.php";
 		echo "<table border=1 width=\"100%\"  style=\"background-color:00FF66\">";
 		echo "<tr>";
 
-		//while there are more rows in the table		
+		//while there are more rows in the table	
+
+		//print columns
+		echo'<tr>
+		<th width="5%">Video_Link</th>
+		<th  width="5%">Course_Name</th>
+		<th  width="5%">Category</th>
+		<th  width="5%">Start Date</th>
+		<th  width="5%">Duration</th>
+		<th  width="5%">Instructor</th>
+		<th  width="5%">Image</th>
+		<th  width="5%">Site</th>
+		</tr>';
+		
 		while($row = mysqli_fetch_array($result))
 		{
 			$courseImage=$row['course_image'];
