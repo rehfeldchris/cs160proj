@@ -26,28 +26,6 @@ else// assumes remote connection
 	define('DATABASE',$json_s['Remotedbs']['Database']); 
 }
 
-
-
-//echo $json_s['Localdbs']['User'];
-
- 
- 
- /*
-CONNECTION FOR LOCALHOST
-
-define('HOST','localhost');
-define('NAME','');
-define('PASSWORD','');       
-define('DATABASE','sjsucsor_160s1g1');  
-
-
-CONNECTION FOR REMOTE SERVER
-
-define('HOST','cs160.sjsu-cs.org');  
-define('NAME','sec1group1@sjsu-cs.org');
-define('PASSWORD','cs160group1');
-define('DATABASE','sjsucsor_160s1g1');
-*/
 //database connection 
 
 global $dbc;
