@@ -34,9 +34,10 @@ require_once "connection.php";
 			$teacherImage=$row['profimage'];
 			$courseLink=$row['course_link'];
 			$site=$row['site'];
+			$videoLink=$row['video_link'];
 			
 			echo "<tr>
-			<td width=\"5%\"><img src=\"$courseImage\" width=\"200px\" height=\"100px\"></td>
+			<td width=\"5%\"><a href=\"$videoLink\"><img src=\"$courseImage\" width=\"200px\" height=\"100px\"></a></td>
 			<td width=\"5%\"><a href=\"$courseLink\">$title</td>
 			<td width=\"5%\">$categ</td>
 			<td width=\"5%\">$startTime</td>
