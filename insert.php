@@ -47,7 +47,9 @@ foreach ($edxUrls as $url) {
 
 /**
  * insertCourseDetails, adds primary professors to coursedetails database
- * @param $siteurl, array of site links
+ * @param $url, array of site links
+ * @param $extraInfo, extra information [Optional]
+ * @param $website, the site name where the $url is being passed by
  **/
 
 function insertCourseDetails($url, $extraInfo = array(),$website="Coursera"){
@@ -58,10 +60,9 @@ function insertCourseDetails($url, $extraInfo = array(),$website="Coursera"){
 
     echo "$url\n";
 
-    
 	try {
 		$p = $factory->create($url, $extraInfo);
-        $p->parse();
+        	$p->parse();
 	} catch (Exception $e) {
         //these really should be logged....but print to stdout for now
         echo "parsing failure for $url\n";
@@ -71,9 +72,8 @@ function insertCourseDetails($url, $extraInfo = array(),$website="Coursera"){
 
     if (!$p->isValid()){
         echo "invalid parser for $url\n";
-		return false;
+	return false;
     }
-
 	
 	//to store primary professors	
 	$prim_prof = $p->getProfessors();
@@ -99,7 +99,7 @@ function insertCourseDetails($url, $extraInfo = array(),$website="Coursera"){
     $category = $dbc->real_escape_string(join(', ', $p->getCategoryNames()));
 	
 		//insert to course_data first 
-		$que ="INSERT INTO `sjsucsor_160s1g1`.`course_data` (`id`, `title`, `short_desc`, `long_desc`, `course_link`, `video_link`, 
+		$que ="INSERT INTO `course_data` (`id`, `title`, `short_desc`, `long_desc`, `course_link`, `video_link`, 
 				`start_date`, `course_length`, `course_image`, 			`category`, `site`)
 		 	  VALUES ('0', '$title', '$short_desc', '$long_desc', '$course_link', '$video_link', '$course_date', '$course_length', '$course_image', '$category', '$website');";
 		
@@ -118,7 +118,7 @@ function insertCourseDetails($url, $extraInfo = array(),$website="Coursera"){
 			$image= $dbc->real_escape_string($row['image']); 
 			
 			//prepare query for inserting to coursedetails table	  											 
-		    $sql = "INSERT INTO `sjsucsor_160s1g1`.`coursedetails`(`id`, `profname`, `profimage`)
+		    $sql = "INSERT INTO `coursedetails`(`id`, `profname`, `profimage`)
 					VALUES 
 					( '$id', '$name', '$image');" or die($dbc->error);	  
 			

@@ -15,15 +15,13 @@ require_once 'connection.php';
 function cleanTables(){
 
     //prepare queries for cleaning tables
-    $drop1 ="delete from `sjsucsor_160s1g1`.`coursedetails`";
-    $drop2 ="delete from  `sjsucsor_160s1g1`.`course_data`";
+    $drop1 ="delete from `coursedetails`";
+    $drop2 ="delete from `course_data`";
 
     $dbc=$GLOBALS['dbc'];
     //clean coursedetails table
     $dbc->query($drop1) or die ($dbc->error);
     //clean course_data table
     $dbc->query($drop2) or die ($dbc->error);
-
 }
-
 ?>
