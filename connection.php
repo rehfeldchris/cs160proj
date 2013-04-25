@@ -7,7 +7,7 @@
  
  
  
- $flagLocalDB=false;// set to use local database
+$flagLocalDB = true;
  
 $string = file_get_contents("dbconfiguration.json");
 $json_s = json_decode($string,true);
@@ -51,5 +51,5 @@ define('DATABASE','sjsucsor_160s1g1');
 //database connection 
 global $dbc;
 $dbc = mysqli_connect(HOST,NAME,PASSWORD,DATABASE) or die($dbc->connect_error);
-
+$dbc->set_charset('utf8');
 ?>

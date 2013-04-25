@@ -5,7 +5,9 @@
  *and adds all returned data into the course_data and coursedetails tables.
  *
  *@author Manzoor Ahmed
+ *@author Chris Rehfeld
  */
+header('content-type: text/plain;charset=utf-8');
 
 require_once 'connection.php';
 require_once 'AbstractCourseParser.php';
