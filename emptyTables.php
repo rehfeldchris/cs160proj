@@ -17,7 +17,7 @@ function cleanTables(){
     //prepare queries for cleaning tables
     $drop1 ="delete from `coursedetails`";
     $drop2 ="delete from `course_data`";
-	$drop3 = "delete from  `trendingcourses`";
+    $drop3 = "delete from `trendingcourses`";
 
     $dbc=$GLOBALS['dbc'];
     //clean coursedetails table
