@@ -1,18 +1,15 @@
-<?php
-header('content-type: text/html;charset=utf-8');
-
-?><html>
+<html>
 <head><title>KaZOOM</title>
 <meta name="Author" content="Manzoor Ahmed">
 <!--My version of the output--> 
-
 </head>
 <body>
 
-
 <?php
 
-// your table missing the long description that's why it looks so nice
+/*
+ *index.php is tha main page of the site, and shows all the output from databases
+ **/
 require_once('connection.php');
 require_once("TableInfo.php");
 

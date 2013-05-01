@@ -58,7 +58,7 @@ function insertCourseDetails($url, $extraInfo = array(),$website="Coursera"){
     
     $factory = new ParserFactory();    
 
-    echo "$url\n";
+    //echo "$url\n";
 
 	try {
 		$p = $factory->create($url, $extraInfo);
@@ -76,9 +76,9 @@ function insertCourseDetails($url, $extraInfo = array(),$website="Coursera"){
     }
 	
 	//to store primary professors	
+	$id;
 	$prim_prof = $p->getProfessors();
 	$title = $dbc->real_escape_string($p->getCourseName());	
-    	$title = $dbc->real_escape_string($p->getCourseName());
 	$short_desc = $dbc->real_escape_string($p->getShortCourseDescription());  
 	$long_desc = $dbc->real_escape_string($p->getLongCourseDescription());				  
 	$course_link = $dbc->real_escape_string($p->getHomepageUrl());			  
@@ -94,8 +94,6 @@ function insertCourseDetails($url, $extraInfo = array(),$website="Coursera"){
 		$course_date = "Date to be announced"; // this is not necessary
 	}*/
 	$site = $dbc->real_escape_string($p->getUniversityName());	
-
-        
     $category = $dbc->real_escape_string(join(', ', $p->getCategoryNames()));
 	
 		//insert to course_data first 
@@ -109,6 +107,11 @@ function insertCourseDetails($url, $extraInfo = array(),$website="Coursera"){
 		//get the last auto generated id, needed for insert to the next table
 		$id =mysqli_insert_id($dbc);  
 		
+		//insert to trendingcourses table with no hits by defualts; this table is only for tracking Trending Courses only
+		$hit_query = "INSERT INTO `trendingcourses` (`id` ,`hits`)
+					  VALUES ('$id', '0');";
+					
+		$dbc->query($hit_query) or die($dbc->error);
 		
 		//loop through 2d array, and get all the professors who are teaching the class
 		foreach($prim_prof as $row){ 
@@ -118,7 +121,7 @@ function insertCourseDetails($url, $extraInfo = array(),$website="Coursera"){
 			$image= $dbc->real_escape_string($row['image']); 
 			
 			//prepare query for inserting to coursedetails table	  											 
-		    $sql = "INSERT INTO `coursedetails`(`id`, `profname`, `profimage`)
+		    $sql = "INSERT INTO `coursedetails` (`id`, `profname`, `profimage`)
 					VALUES 
 					( '$id', '$name', '$image');" or die($dbc->error);	  
 			
@@ -127,7 +130,6 @@ function insertCourseDetails($url, $extraInfo = array(),$website="Coursera"){
 		}//end foreach
 
 }//end function
-
 
 exit;
 ?>
