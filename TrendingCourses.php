@@ -1,7 +1,7 @@
 <?php
  
 /**
- * TrakURL.php track of clicks on a course link, and increments the count for that link
+ * TrendingCourses.php track of clicks on a course link, and increments the count for that link
  * This script is used to find trending courses
  * @Author Manzoor Ahmed
  **/
