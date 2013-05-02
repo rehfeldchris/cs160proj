@@ -58,7 +58,7 @@ class EdxCourseParser extends AbstractCourseParser
         //format in html is usally Sep 15, 2013
         //but sometimes just Sept, 2013
         $dateStr = trim(str_replace(',', '', $start));
-        if (preg_match('~^\w+(\d{1,2} )? \d{2,4}$~', $dateStr))
+        if (preg_match('~^\w+( \d{1,2})? \d{2,4}$~', $dateStr))
         {
             $ts = '@' . strtotime($dateStr);
             $this->startDate = date_create($ts);
@@ -73,8 +73,8 @@ class EdxCourseParser extends AbstractCourseParser
         $end = pq('.final-date')->slice(0, 1)->text();
         //format in html is usally Sep 15, 2013
         //but sometimes just Sept, 2013
-        $dateStr = trim(str_replace(',', '', $start));
-        if (preg_match('~^\w+(\d{1,2} )? \d{2,4}$~', $dateStr))
+        $dateStr = trim(str_replace(',', '', $end));
+        if (preg_match('~^\w+( \d{1,2})? \d{2,4}$~', $dateStr))
         {
             $ts = '@' . strtotime($dateStr);
             $this->endDate = date_create($ts);
@@ -89,7 +89,7 @@ class EdxCourseParser extends AbstractCourseParser
         if ($this->startDate && $this->endDate)
         {
             // divide diff by seconds per day
-            $diffDays = ($this->endDate->format('U') / $this->startDate->format('U')) / (60 * 60 * 24);
+            $diffDays = ($this->endDate->format('U') - $this->startDate->format('U')) / (60 * 60 * 24);
             $this->duration = ceil($diffDays / 7);
         }
         
@@ -133,7 +133,14 @@ class EdxCourseParser extends AbstractCourseParser
 //        $this->universityName = EdxUniversityNameConverter::convert($this->universityName);
 		
         //course name
-        $this->courseName = pq('hgroup h1')->clone()->children()->remove()->end()->text();
+        $courseName = trim(pq('hgroup h1')->clone()->children()->remove()->end()->text());
+        
+        //edx has leading course codes. they always contain a number, 
+        //and the code is always seperated from the title with a space
+        //we strip 
+        $preparedName = preg_replace('~^(\S*\d[^ ]* )?(.*?)~', '\2', $courseName);
+        
+        $this->courseName = trim($preparedName);
 		
         //workload
         $effort = pq('p:contains("Estimated Effort")')->next('.start-date')->slice(0, 1)->text();
