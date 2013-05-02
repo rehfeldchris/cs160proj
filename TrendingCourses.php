@@ -11,20 +11,24 @@
 	ignore_user_abort(true);
 	//get url 
 	$url = $_GET['url'];
-	//redirect to the url while incrementing hits for this url
-	header("Location: $url",true) ;
-	
-	//make sure this is correct url 
-	if(parse_url($url) !== false){
-		
-	//check host
-	$hostInfo = parse_url($url);
+    
+    $hostInfo = parse_url($url);
 
+	//make sure the url was able to be parsed, which validates that its probably not some junk value
+	if($hostInfo !== false){
 		//make sure host name is either Coursera or Edx
-		if((strcmp($hostInfo["host"],"www.coursera.org") == 0) || ((strcmp($hostInfo["host"],"www.edx.org") ==0))){
+        // todo? it might be better to allow urls without www. prefix
+		if((strcasecmp($hostInfo["host"],"www.coursera.org") == 0) || ((strcasecmp($hostInfo["host"],"www.edx.org") ==0))){
+            //redirect to the url while incrementing hits for this url
+            //but only after verifying its an edx or coursera url.
+            // we reject other stuff, espescially if parsing failed
+            header("Location: $url",true) ;
+            
+            //todo: manzoor, dont forget to escape all values you use in sql querys
+
 			
 			//find id of given url
-			$idQuery ="SELECT id FROM `course_data` WHERE course_link like '%{$url}%'";
+			$idQuery ="SELECT id FROM `course_data` WHERE course_link = '%{$url}%'";
 			$row = $dbc->query($idQuery) or die($dbc->error);
 			//returned column
 			$singleColumn = $row->fetch_row();
@@ -48,6 +52,10 @@
 				$increment = "UPDATE `trendingcourses` SET `hits` = $newNum  WHERE `trendingcourses`.`id` ='$id';";
 				$dbc->query($increment) or die($dbc->error);
 			}//if
-		}//course if
-	}//outter
+		} else {
+            echo "not coursera or edx";
+        }
+	} else {
+        echo "url parsing failed.";
+    }
 ?>
