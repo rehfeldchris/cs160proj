@@ -1,7 +1,7 @@
 <?php
  
 /**
- * TrendingCourses.php increments count for a clicked link in trendingcourses table
+ * TrendingCourses.php increments count for a  link in trendingcourses table
  * This script is used to count hits for each course
  * @Author Manzoor Ahmed
  **/
@@ -14,7 +14,7 @@
 	
 	#get url 
 	$url = $_GET['url'];
-    $hostInfo = parse_url($url);
+        $hostInfo = parse_url($url);
 	
 	#make sure the url to be parsed, which validates that its probably not some junk value
 	if($hostInfo !== false){
@@ -33,10 +33,10 @@
 			||  ((strcasecmp($hostInfo["host"],"www.edx.org")==0) && (strcasecmp($coursepath[1],"courses")==0))){
 				
 			   /**
-				* redirect to the url while incrementing hits for this url
-            	* but only after verifying it's an edx or coursera url
-            	* we reject other stuff, espescially if parsing failed
-       			*/
+			    * redirect to the url while incrementing hits for this url
+            	            * but only after verifying it's an edx or coursera url
+            	            * we reject other stuff, espescially if parsing failed
+       			    */
 				
 				#try to parse ther $url; we might not need this. 
 				$factory = new ParserFactory(); 
