@@ -14,7 +14,7 @@
 	
 	#get url 
 	$url = $_GET['url'];
-    $hostInfo = parse_url($url);
+        $hostInfo = parse_url($url);
 	
 	#make sure the url to be parsed, which validates that its probably not some junk value
 	if($hostInfo !== false){
@@ -42,7 +42,9 @@
 					
 					#find id of given url
 					$idQuery ="SELECT id FROM `course_data` WHERE `course_link` LIKE '%{$url}%';";
+					//$idQuery = $dbc->real_escape_string(...) gives an erro
 					$row = $dbc->query($idQuery) or die($dbc->error);
+					
 					
 					#returned column
 					$singleColumn = $row->fetch_row();
