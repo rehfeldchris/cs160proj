@@ -1,7 +1,7 @@
 <?php
  
 /**
- * TrendingCourses.php increments count for a  link in trendingcourses table
+ * TrendingCourses.php increments count for a clicked link in trendingcourses table
  * This script is used to count hits for each course
  * @Author Manzoor Ahmed
  **/
@@ -14,7 +14,7 @@
 	
 	#get url 
 	$url = $_GET['url'];
-        $hostInfo = parse_url($url);
+    $hostInfo = parse_url($url);
 	
 	#make sure the url to be parsed, which validates that its probably not some junk value
 	if($hostInfo !== false){
@@ -32,29 +32,11 @@
 			if( ((strcasecmp($hostInfo["host"],"www.coursera.org")==0) && (strcasecmp($coursepath[1],"course")==0))
 			||  ((strcasecmp($hostInfo["host"],"www.edx.org")==0) && (strcasecmp($coursepath[1],"courses")==0))){
 				
-			   /**
-			    * redirect to the url while incrementing hits for this url
-            	            * but only after verifying it's an edx or coursera url
-            	            * we reject other stuff, espescially if parsing failed
-       			    */
-				
-				#try to parse ther $url; we might not need this. 
-				$factory = new ParserFactory(); 
-						
-				try {
-					$p = $factory->create($url, $extraInfo= array());
-        			$p->parse();
-				} catch (Exception $e) {
-        					
-				}
-
-				if (!$p->isValid()){
-					#redirect user back to index.php
-					header("Location: index.php",true);
-				}
-				
-				#we parsed the url
-				else{	
+			  /**
+			   * redirect to the url while incrementing hits for this url
+            		   * but only after verifying it's an edx or coursera url
+            	           * we reject other stuff, espescially if parsing failed
+       			   */			
 					#redirect user to $url
 					header("Location: $url",true) ;
 					
@@ -66,7 +48,6 @@
 					$singleColumn = $row->fetch_row();
 					#get id number from column
 					$id = $singleColumn[0];
-					echo $id;
 					
 					#find hits in course_hits table with given id
 					$getHits = "SELECT hits FROM `trendingcourses` WHERE `id` = '$id';";
@@ -85,7 +66,7 @@
 							$increment ="UPDATE `trendingcourses` SET `hits` = $newNum  WHERE `trendingcourses`.`id` ='$id';";
 							$dbc->query($increment) or die($dbc->error);
 					   }//if	
-				}//else		   
+				//}//else		   
 		  }//if course
 		  
 	}//if hostname
