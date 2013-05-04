@@ -164,10 +164,10 @@ $stmt->free_result();
         -webkit-box-shadow:0 0 20px rgba(0,0,0,0.8);
         -moz-box-shadow:0 0 20px rgba(0,0,0,0.8);
         box-shadow:0 0 20px rgba(0,0,0,0.8);
-        border-radius: 30px;
+        border-radius: 5px;
         -moz-border-radius: 5px;
         -khtml-border-radius: 5px;
-        -webkit-border-radius: 5px;"
+        -webkit-border-radius: 5px;
     }
     
 </style>
