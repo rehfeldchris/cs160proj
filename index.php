@@ -1,3 +1,7 @@
+<?php
+header('content-type: text/html;charset=utf-8');
+?>
+
 <html>
 <head><title>KaZOOM</title>
 <meta name="Author" content="Manzoor Ahmed">
