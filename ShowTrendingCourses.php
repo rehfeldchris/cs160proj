@@ -60,9 +60,6 @@ $maxHits = $dbc->query($query) or die($dbc->error);
 					$link ="#";
 				}//else
 				
-				//print trending course, format1
-				//echo"<a href ='$link' style='color:#0066CC;'>$course_title</a>\t";
-				
 				//print trending course, format2
 				echo"<ul style='list-style-type:none;display:inline;'><li><a href='$link'>$course_title</a></li></ul>";
 			}//result			
