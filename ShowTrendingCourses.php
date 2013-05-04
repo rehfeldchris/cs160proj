@@ -1,7 +1,7 @@
 <?php
 
 /**
- *ShowTrendinCourses.php select courses with hits starting from $minHits, and shows only five of them with higer hits
+ *ShowTrendingCourses.php outputs trending courses
  *
  *@Author Manzoor Ahmed
  *TODO: I will make this a class, and then just call the method, but for now it shows trending courses
