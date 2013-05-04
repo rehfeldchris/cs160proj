@@ -134,9 +134,29 @@ $stmt->free_result();
     #addCommentForm textarea {width: 500px; height: 120px;}
     #addCommentForm p {font-size: 12pt;}
     
-    #courseData h1 {
-        text-align:center;
+    #courseData h1, h2, h3, h4, h5, h6 {
+        font-family: Tahoma, Helvetica, Arial, Sans-Serif;
+        font-weight: normal;
+        color: #504f4f;
+        text-shadow: 0px 2px 1px #bbbaba;
     }
+    
+    #courseData h1 {
+        font-size: 48pt;
+        text-align: center;
+    }
+    
+    #courseData h2 {
+        font-size: 24pt;
+        text-align: left;
+    }
+    
+    #userReviews h5 {
+        font-size: 18pt;
+        text-align: left;
+    }
+    
+    
     
     #courseData {
         margin: 1em;
@@ -221,7 +241,7 @@ $stmt->free_result();
         </div>
         
         <div id="professors">
-            <h3>Professors</h3>
+            <h2>Professors</h2>
             <?php if ($professors) { ?>
             <ul>
             <?php foreach ($professors as $entry) { ?>
@@ -242,7 +262,7 @@ $stmt->free_result();
         
         
         <div id="longDescription">
-            <h3>Description</h3>
+            <h2>Description</h2>
             <?php echo $long_desc; ?>
         </div>
     </div>
