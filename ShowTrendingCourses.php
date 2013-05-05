@@ -1,15 +1,56 @@
-<?php
+<html>
+	<head>
+		<title>Trending Courses</title>
+		<meta name="Author" content="Manzoor Ahmed"/>
 
+		<style type="text/css">
+			
+			#holder{
+				width:auto;
+				height:auto;
+				}
+			
+			.course{
+					background: none repeat scroll 0 0 #64F479 ;
+					border: 1px solid #73C0E6;
+					border-radius: 30px 15px 0px 0px;
+					border-bottom:solid 2px;
+					border-bottom-color:#000000;
+					color: #000058;
+					list-style: none outside none;
+					min-height: 50px;
+					overflow: hidden;
+					padding: 10px 15px 15px 15px;
+					position: relative;
+					width: 97%;
+					z-index: 3;
+					}
+					
+			.course a{
+				   color:#000000;
+				   font-family:Verdana, Arial, Helvetica, sans-serif;
+				   font-size:18px;
+				   font-weight:bold;
+				}
+			.image{
+				width:80px;
+				height:70px;
+				float:right;
+				}
+		</style>
+	
+	</head>
+<body>
+<?php
 /**
- *ShowTrendingCourses.php outputs trending courses
+ *ShowTrendinCourses.php select courses with hits starting from $minHits, and shows only five of them with higer hits
  *
- *@Author Manzoor Ahmed
- *TODO: I will make this a class, and then just call the method, but for now it shows trending courses
+ *@Author Manzoor Ahmed 
  */
  
 include 'connection.php';
 
-//we need at least five hits for a course to be considered it as a trending course; we can always change this.  
+//we need at least five hits for a course to consider it as a trending course; we can always change this.  
 global $minHits;
 //how many trending courses we need to show--$limit is the max number of courses we can show
 global $limit;
@@ -29,6 +70,7 @@ $maxHits = $dbc->query($query) or die($dbc->error);
 	
 	if($maxHits){
 	
+		echo "<div id='holder'>";
 		while($row = mysqli_fetch_array($maxHits)){
 		
 			//need id first to find course information
@@ -60,14 +102,29 @@ $maxHits = $dbc->query($query) or die($dbc->error);
 					$link ="#";
 				}//else
 				
-				//print trending course, format2
-				echo"<ul style='list-style-type:none;display:inline;'><li><a href='$link'>$course_title</a></li></ul>";
+				//print trending course, format1
+				//echo"<a href ='$link' style='color:#0066CC;'>$course_title</a>\t";
+				
+				$image_query = $dbc->real_escape_string("SELECT `course_image` from `course_data` WHERE `id` = $id;");
+				$image_run = $dbc->query($image_query) or die($dbc->error);
+				$image = $image_run->fetch_row();
+				
+				
+				//print trending course, with image
+				echo "<div class ='course'>";
+					echo"<ul style='list-style-type:none;display:inline;'>
+							<li><a href='$link'>$course_title</a>
+								<div class='image'><img src ='$image[0]' width ='80', height='70'/></div>
+							</li>
+						</ul>";
+				echo "</div>";
+				
 			}//result			
-			
 			else{
 			    echo "";
 			}			
 		}//end while
+		echo "</div>";
 	}//if
 	//we don't have trending courses yet
 	else{
@@ -78,3 +135,5 @@ $maxHits = $dbc->query($query) or die($dbc->error);
 showTrendingCourses();
 
 ?>
+</body>
+</html>
