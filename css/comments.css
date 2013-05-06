@@ -1,5 +1,5 @@
 .comment { 
-    white-space: pre;
+    white-space: pre-wrap;
     overflow: hidden;
     text-align: left;
     font-size: 12pt;
