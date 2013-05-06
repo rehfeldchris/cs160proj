@@ -79,8 +79,9 @@ if (isset($_REQUEST['subscribe'])) {
 	if (isset($_REQUEST['email']) && isset($_REQUEST['sites']) && isset($_REQUEST['freq'])) {
 		$dbc = $GLOBALS['dbc'];
 	
-		//$email = $dbc->real_escape_string($_REQUEST['email']);
-		$email = 'tbraginets@gmail.com';
+		$email = $dbc->real_escape_string($_REQUEST['email']);
+		//echo $email;
+		//$email = 'tbraginets@gmail.com';
 		$freq = $dbc->real_escape_string($_REQUEST['freq']);
 		$sites = array();
 		foreach($_REQUEST['sites'] as $site) {
