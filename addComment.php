@@ -20,6 +20,10 @@ if (!strlen($_POST['message']) || !ctype_digit($_POST['courseId'])) {
     exit;
 }
 
+if (get_magic_quotes_gpc()) {
+	$_POST['message'] = stripslashes($_POST['message']);
+}
+
 $sql = "insert into comments (course_data_id, comment, when_posted) values (?, ?, now())";
 $stmt = $dbc->prepare($sql);
 if (!$stmt) {
