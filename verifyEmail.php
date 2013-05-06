@@ -24,32 +24,7 @@ function randString($length, $charset='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmno
 <head>
 <title>Kazoom - Email subscription</title>
 <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
-<style>
-	body {
-		font-family: verdana, arial, sans-serif; 
-		background-image: url(images/white_sand.png); 
-		background-repeat: repeat;
-		margin-top: 20px;
-	}
-
-	h1, h2, h3, h4, h5, h6 {
-        font-family: Tahoma, Helvetica, Arial, Sans-Serif;
-        font-weight: normal;
-        color: #504f4f;
-        text-shadow: 0px 2px 1px #bbbaba;
-    }
-	
-	.gradientHr {
-		border: 0;
-		height: 1px;
-		background-image: -webkit-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0));
-		background-image: -moz-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0));
-		background-image: -ms-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0));
-		background-image: -o-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0));
-	}
-
-
-</style>
+<link rel="stylesheet" href="css/style.css" type="text/css">
 </head>
 <body>
  <div class="container">
@@ -74,7 +49,7 @@ if (isset($_REQUEST['email']) && isset($_REQUEST['key'])) {
 		$verified = $row['verified'];
 		if (!$verified) {
 			$key = randString(50);
-			$que="UPDATE subscription_emails SET verified='1', rand_key='$key' 
+			$que = "UPDATE subscription_emails SET verified='1', rand_key='$key' 
 				WHERE email_id='$email_id'";
 			$dbc->query($que);
 		}
