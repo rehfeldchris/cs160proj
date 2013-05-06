@@ -93,7 +93,7 @@ if (isset($_REQUEST['subscribe'])) {
 		$headers = 'Reply-To: noreply@box334.bluehost.com' . "\r\n" .
 					'X-Mailer: PHP/' . phpversion();
 		
-		$que="SELECT email, verified, rand_key FROM subscription_emails WHERE 1 AND email='$email'";
+		$que="SELECT email, verified, rand_key, max FROM subscription_emails WHERE 1 AND email='$email'";
 		$result = $dbc->query($que);
 		if($result && $result->num_rows) { 
 			$row = $result->fetch_array();
@@ -101,22 +101,33 @@ if (isset($_REQUEST['subscribe'])) {
 			if ($verified) {
 				echo "You are already subscribed to notifications.";
 			} else {
-				$key = $row['rand_key'];
-				$link = 'http://www.sjsu-cs.org/cs160/spring2013/sec1group1/cs160proj/verifyEmail.php?email=' 
-					. $email . '&key=' . $key;
-				$message = 'Please confirm you subscription to Kazoom updates by following the link: ';
-				$message .= $link;
-				$message .= '. If you do not recognize this subscription, please discregard this email.';
-				mail($email, $subject, $message, $headers);
-				
-				echo "You have already subscribed to notifications, but have not verified your email address.
-					A new confirmation email have been sent. Please, click confirmation link in it to verify your email address.";
+				$max = $row['max'];
+				if ($max == 3) {
+					echo "You have reached maximum number of confirmation emails sent. 
+						Please, make sure you are entering a correct email address and check your spam folder,
+						 or contact site administrator for assistance.";
+				} else {
+					$max++;
+					$que="UPDATE subscription_emails SET max='$max'
+						WHERE email = '$email'";
+						$dbc->query($que);
+						$key = $row['rand_key'];
+						$link = 'http://www.sjsu-cs.org/cs160/spring2013/sec1group1/cs160proj/verifyEmail.php?email=' 
+							. $email . '&key=' . $key;
+						$message = 'Please confirm you subscription to Kazoom updates by following the link: ';
+						$message .= $link;
+						$message .= '. If you do not recognize this subscription, please discregard this email.';
+						mail($email, $subject, $message, $headers);
+						echo "You have already subscribed to notifications, but have not verified your email address.
+							A new confirmation email have been sent. Please, click confirmation link in it to 
+							verify your email address.";
+				}
 			}
 		
 		} else {
 			$key = randString(50);
-			$que ="INSERT INTO subscription_emails (email, rand_key, verified, frequency, date_added, sites)
-				  VALUES ('$email', '$key', '0', '$freq', now(), '$site_options');";
+			$que ="INSERT INTO subscription_emails (email, rand_key, verified, frequency, date_added, sites, max)
+				  VALUES ('$email', '$key', '0', '$freq', now(), '$site_options', '1');";
 			$dbc->query($que) or die($dbc->error);
 			
 			$link = 'http://www.sjsu-cs.org/cs160/spring2013/sec1group1/cs160proj/verifyEmail.php?email=' 
