@@ -1,13 +1,13 @@
 <?php
 
 /*
- *OutputKeywords searches for trending keywords and outputs it
- *
+ *OutputKeywords searches for trending keywords and outputs the results
+ * @Author Manzoor Ahmed
  */
 
 class OutputKeywords{
 
-var $maxSearch = 5;  //search for only top 5 
+var $maxSearch = 5;  //search for only top 5, I just hard coded the value for now, had issues with running query 
 var $maxShow =5;    //show only 5 rows 
 
 	function showKeywords($dbc){
@@ -17,8 +17,6 @@ var $maxShow =5;    //show only 5 rows
 	
 		if($query_run){
 		
-		
-
 			echo "<div id='holder'>";
 					//print trending course, with image
 					echo "<div style='color:green;size:15px;'>";
