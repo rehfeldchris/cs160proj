@@ -6,7 +6,6 @@
 <title>SEARCH KaZOOM</title>
 
 <style type="text/css">
-
 #search, #submit
 {
 	float: left;
@@ -70,7 +69,6 @@
 {		
 	background: #95d788;
 	outline: none;
-   
 	 -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;
 	 -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;
 	 box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;		
@@ -105,6 +103,8 @@ ini_set('display_errors', 1);
 
 if(isset($_POST['submit']))
 {
+	//ignore validating for now...
+	
 	$word = $_POST['search'];
 	$output = new OutputSearch();
 	$output->searchResults($word,$dbc=$GLOBALS['dbc']);
