@@ -48,7 +48,7 @@
  *@Author Manzoor Ahmed 
  */
  
-include 'connection.php';
+require_once("connection.php");
 
 //we need at least five hits for a course to consider it as a trending course; we can always change this.  
 global $minHits;
@@ -112,11 +112,11 @@ $maxHits = $dbc->query($query) or die($dbc->error);
 				
 				//print trending course, with image
 				echo "<div class ='course'>";
-					echo"<ul style='list-style-type:none;display:inline;'>
-							<li><a href='$link'>$course_title</a>
-								<div class='image'><img src ='$image[0]' width ='80', height='70'/></div>
-							</li>
-						</ul>";
+				echo"<ul style='list-style-type:none;display:inline;'>
+						<li><a href='$link'>$course_title</a>
+							<div class='image'><img src ='$image[0]' width ='80', height='70'/></div>
+						</li>
+					</ul>";
 				echo "</div>";
 				
 			}//result			
