@@ -9,7 +9,7 @@
 class OutputSearch{
 
 	/**
-	 *searchResults the only function which prints all returned data
+	 *searchResults prints all returns search data
 	 *$word, text input to search for
 	 *$dbc, connection to the database
 	 */
