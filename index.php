@@ -90,10 +90,10 @@
  * and for each search keyword, we increment the hit
  **/
  
-require_once 'connection.php';
-require_once("ShowTrendingCourses.php");
-require_once("OutputSearch.php");
-require_once("OutputKeywords.php");
+require 'connection.php';
+require 'ShowTrendingCourses.php';
+require_once 'OutputSearch.php';
+require_once 'OutputKeywords.php';
 
 /**
  *index.php is tha main page of the site, and shows all the output from databases

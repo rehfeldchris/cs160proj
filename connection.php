@@ -7,7 +7,7 @@
  
  
  
-$flagLocalDB = false;
+$flagLocalDB = true;
  
 $string = file_get_contents("dbconfiguration.json");
 $json_s = json_decode($string,true);
@@ -18,6 +18,7 @@ if($flagLocalDB)// assumes local connection
 	define('PASSWORD',$json_s['Localdbs']['Password']);       
 	define('DATABASE',$json_s['Localdbs']['Database']); 
 }
+
 else// assumes remote connection
 {
 	define('HOST',$json_s['Remotedbs']['Host']);
