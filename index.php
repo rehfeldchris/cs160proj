@@ -74,6 +74,12 @@
 	 box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;		
 }
 
+#subscribe-link
+{
+	padding-left: 9px;
+	padding-top: 5px;
+	font: bold 14px Arial, Helvetica;
+}
 </style>
 </head>
 <body>
@@ -110,7 +116,7 @@ if(isset($_POST['submit']))
 	$output->searchResults($word,$dbc=$GLOBALS['dbc']);
 }//isset
 ?>
-
+<a id="subscribe-link" href="subscribe.php">Subscribe to notifications</a>
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <table width="100%">
 	<tr>
