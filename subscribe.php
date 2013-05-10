@@ -5,11 +5,13 @@
  * 
  * @author Tatiana Braginets
  * Random string f-n: http://stackoverflow.com/questions/853813/how-to-create-a-random-string-using-php
+ * Regex for email: http://www.regular-expressions.info/email.html
  */
 
 header('content-type: text/html;charset=utf-8');
 require_once 'connection.php';
 
+$dbc = $GLOBALS['dbc'];
 
 function randString($length, $charset='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789')
 {
@@ -23,18 +25,40 @@ function randString($length, $charset='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmno
 
 function getSites() 
 {
-	$dbc = $GLOBALS['dbc'];
+	global $dbc;
 	$que="SELECT DISTINCT site FROM course_data";
 	$result = $dbc->query($que);
 	$ret = "";
 	if($result) { 
 		while($row = $result->fetch_array()){
 			$site = "" . $row['site'];
-			$ret .= '<label><input name="sites[]" type="checkbox" value="' . $site .  '" checked>' . $site .'</label><br>';
+			$checked = "";
+			if (isset($_REQUEST['sites']) 
+				&& (array_search($site, $_REQUEST['sites']) !== FALSE)) {
+				$checked = "checked";
+			}
+			$ret .= '<label><input name="sites[]" type="checkbox" value="' 
+					. $site .  '" '. $checked . '>' . $site .'</label><br>';
 		}
 	}
 	return $ret;
 }
+
+function getFormErrors() {
+	$errors = "";
+	global $dbc;
+	if (!isset($_REQUEST['email'])
+		|| !preg_match("/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$/", 
+			$dbc->real_escape_string($_REQUEST['email']))) {
+		$errors .= '<p class="text-warning">Please enter a valid email</p>';
+	} 
+	if (!isset($_REQUEST['sites'])) {
+		$errors .= '<p class="text-warning">At least one site must be checked</p>';
+	}
+
+	return $errors;
+}
+
 ?>
 <!DOCTYPE html>
 <head>
@@ -48,85 +72,87 @@ function getSites()
 	<hr class="gradientHr">
 
 <?php
+$errors = '';
 
-if (isset($_REQUEST['subscribe'])) {
+if (isset($_REQUEST['subscribe']) && ($errors = getFormErrors()) === "") {
 	
-	if (isset($_REQUEST['email']) && isset($_REQUEST['sites']) && isset($_REQUEST['freq'])) {
-		$dbc = $GLOBALS['dbc'];
-	
-		$email = $dbc->real_escape_string($_REQUEST['email']);
-		//echo $email;
-		//$email = 'tbraginets@gmail.com';
-		$freq = $dbc->real_escape_string($_REQUEST['freq']);
-		$sites = array();
-		foreach($_REQUEST['sites'] as $site) {
-			$sites[] = $dbc->real_escape_string($site);
-		}
-		$site_options = implode(',', $sites);
-		//echo $site_options;
-		
-		$subject = 'Confirm you subscription to Kazoom';
-		$headers = 'Reply-To: noreply@box334.bluehost.com' . "\r\n" .
-					'X-Mailer: PHP/' . phpversion();
-		
-		$que="SELECT email, verified, rand_key, max FROM subscription_emails WHERE 1 AND email='$email'";
-		$result = $dbc->query($que);
-		if($result && $result->num_rows) { 
-			$row = $result->fetch_array();
-			$verified = $row['verified'];
-			if ($verified) {
-				echo "You are already subscribed to notifications.";
-			} else {
-				$max = $row['max'];
-				if ($max == 3) {
-					echo "You have reached maximum number of confirmation emails sent. 
-						Please, make sure you are entering a correct email address and check your spam folder,
-						 or contact site administrator for assistance.";
-				} else {
-					$max++;
-					$que="UPDATE subscription_emails SET max='$max'
-						WHERE email = '$email'";
-						$dbc->query($que);
-						$key = $row['rand_key'];
-						$link = 'http://www.sjsu-cs.org/cs160/spring2013/sec1group1/cs160proj/verifyEmail.php?email=' 
-							. $email . '&key=' . $key;
-						$message = 'Please confirm you subscription to Kazoom updates by following the link: ';
-						$message .= $link;
-						$message .= '. If you do not recognize this subscription, please discregard this email.';
-						mail($email, $subject, $message, $headers);
-						echo "You have already subscribed to notifications, but have not verified your email address.
-							A new confirmation email have been sent. Please, click confirmation link in it to 
-							verify your email address.";
-				}
-			}
-		
-		} else {
-			$key = randString(50);
-			$que ="INSERT INTO subscription_emails (email, rand_key, verified, frequency, date_added, sites, max)
-				  VALUES ('$email', '$key', '0', '$freq', now(), '$site_options', '1');";
-			$dbc->query($que) or die($dbc->error);
-			
-			$link = 'http://www.sjsu-cs.org/cs160/spring2013/sec1group1/cs160proj/verifyEmail.php?email=' 
-				. $email . '&key=' . $key;
-			$message = 'Please confirm you subscription to Kazoom updates by following the link: ';
-			$message .= $link;
-			$message .= '. If you do not recognize this subscription, please discregard this email.';
-			
-			mail($email, $subject, $message, $headers);
-			echo "Confirmation email has been sent. Please, click confirmation link in it to verify your email address.";
-			
-		}
+	$email = $dbc->real_escape_string($_REQUEST['email']);
+	//echo $email;
+	//$email = 'tbraginets@gmail.com';
+	$freq = $dbc->real_escape_string($_REQUEST['freq']);
+	$sites = array();
+	foreach($_REQUEST['sites'] as $site) {
+		$sites[] = $dbc->real_escape_string($site);
 	}
+	$site_options = implode(',', $sites);
+	//echo $site_options;
+		
+	$subject = 'Confirm you subscription to Kazoom';
+	$headers = 'Reply-To: noreply@box334.bluehost.com' . "\r\n" .
+				'X-Mailer: PHP/' . phpversion();
+		
+	$que="SELECT email, verified, rand_key, max FROM subscription_emails WHERE 1 AND email='$email'";
+	$result = $dbc->query($que);
+	if($result && $result->num_rows) { 
+		$row = $result->fetch_array();
+		$verified = $row['verified'];
+		if ($verified) {
+			echo "You are already subscribed to notifications.";
+		} else {
+			$max = $row['max'];
+			if ($max == 3) {
+				echo $email + " You have reached maximum number of confirmation emails sent. 
+					Please, make sure you are entering a correct email address and check your spam folder,
+					 or contact site administrator for assistance.";
+			} else {
+				$max++;
+				$que="UPDATE subscription_emails SET max='$max'
+					WHERE email = '$email'";
+					$dbc->query($que);
+					$key = $row['rand_key'];
+					$link = 'http://www.sjsu-cs.org/cs160/spring2013/sec1group1/cs160proj/verifyEmail.php?email=' 
+						. $email . '&key=' . $key;
+					$message = 'Please confirm you subscription to Kazoom updates by following the link: ';
+					$message .= $link;
+					$message .= '. If you do not recognize this subscription, please discregard this email.';
+					mail($email, $subject, $message, $headers);
+					echo "You have already subscribed to notifications, but have not verified your email address.
+						A new confirmation email have been sent. Please, click confirmation link in it to 
+						verify your email address.";
+			}
+		}
+		
+	} else {
+		$key = randString(50);
+		$que ="INSERT INTO subscription_emails (email, rand_key, verified, frequency, date_added, sites, max)
+			  VALUES ('$email', '$key', '0', '$freq', now(), '$site_options', '1');";
+		$dbc->query($que) or die($dbc->error);
+			
+		$link = 'http://www.sjsu-cs.org/cs160/spring2013/sec1group1/cs160proj/verifyEmail.php?email=' 
+			. $email . '&key=' . $key;
+		$message = 'Please confirm you subscription to Kazoom updates by following the link: ';
+		$message .= $link;
+		$message .= '. If you do not recognize this subscription, please discregard this email.';
+		
+		mail($email, $subject, $message, $headers);
+		echo "Confirmation email has been sent. Please, click confirmation link in it to verify your email address.";
+			
+	}
+	?>
+	</div>
+	</body>
+	</html>
+	<?php exit();
+} else if (isset($_REQUEST['subscribe'])) {
+	echo $errors;
+} ?>
 	
-} else {
-?>
-	
-<form class="form-horizontal" method="post" action="subscribe.php" onsubmit="return validateForm()">
+<form class="form-horizontal" method="post" action="subscribe.php" onsubmit="return validateForm();">
 		<div class="control-group">
 		 <label class="control-label" for="email">Email</label>
 		 
 			<div class="controls">
-				<input type="text" id="email" name="email">
+				<input type="text" id="email" name="email" value="<?php echo $_REQUEST['email'] ?>">
 				<p class="text-warning" id="email_error"></p>
 			</div>
 		</div>
@@ -144,8 +170,11 @@ if (isset($_REQUEST['subscribe'])) {
 		 <label class="control-label" for="freq">Frequency</label>
 			<div class="controls">
 				<select name="freq">
-				<option value="w" selected>Weekly</option>
-				<option value="d">Daily</option>
+				<option id="w" value="w" 
+					<? if($_REQUEST['freq'] === "w") echo "selected"; ?>>Weekly</option>
+				<option id="d" value="d" 
+					<? if($_REQUEST['freq'] === "d") echo "selected"; ?>>Daily</option>
+				
 				</select>
 				
 			</div>
@@ -155,42 +184,36 @@ if (isset($_REQUEST['subscribe'])) {
 				<input type="submit" name="subscribe" value="Subscribe">
 			</div>
 	</form>
-	<?php
-}
-?>
 
 </div>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script>
-	function validateForm()
-	{
-		var email = $('#email').val();
-		if(!email || !countChecked()) {
-			if(!email) {
-				$('#email_error').html("Please, enter your email");
-			} else {
-				$('#email_error').html("");
-			}
-			if(!countChecked()) {
-				$('#sites_error').html("At least one site must be checked");
-			} else {
-				$('#sites_error').html("");
-			}
-			return false;
-		}
+function validateForm()
+{
+		var success = true;
 		$('#email_error').html("");
 		$('#sites_error').html("");
-		return true;
-	}
+			
+		var email = $('#email').val();
+		
+		var reg = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$/;
+		if (!email || !reg.test(email) ) {
+			$('#email_error').html("Please, enter a valid email");
+			success = false;
+		} 
+		if (!countChecked()) {
+			$('#sites_error').html("At least one site must be checked");
+			success = false;
+		}
+		
+		return success;
+}
 
-	var countChecked = function() {
-		return $( "input:checked" ).length;
+var countChecked = function() {
+	return $("input:checked").length;
 
-	};
+};
 </script>
 </body>
 </html>
-<?php
-
-?>
