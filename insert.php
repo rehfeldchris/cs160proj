@@ -21,8 +21,8 @@ set_time_limit(1200);
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-$edxUrls= array();
-$courseraUrls =array();
+$edxUrls = array();
+$courseraUrls = array();
 
 //get all urls from coursera 
 $coursera_urls_parser = new CourseraUrlsParser();
@@ -35,7 +35,10 @@ $edx_urls_parser->parse();
 $edxUrls = $edx_urls_parser->getUrls();
 
 //clean tables before every crawl
-cleanTables();
+//cleanTables();
+removeOldCourses($edxUrls, "Edx");
+removeOldCourses($courseraUrls, "Coursera");
+
 //insert to coursedetails
 foreach ($courseraUrls as $url) {
     insertCourseDetails($url);
@@ -96,40 +99,82 @@ function insertCourseDetails($url, $extraInfo = array(),$website="Coursera"){
 	$site = $dbc->real_escape_string($p->getUniversityName());	
     $category = $dbc->real_escape_string(join(', ', $p->getCategoryNames()));
 	
-		//insert to course_data first 
-		$que ="INSERT INTO `course_data` (`id`, `title`, `short_desc`, `long_desc`, `course_link`, `video_link`, 
-				`start_date`, `course_length`, `course_image`, 			`category`, `site`)
-		 	  VALUES ('0', '$title', '$short_desc', '$long_desc', '$course_link', '$video_link', '$course_date', '$course_length', '$course_image', '$category', '$website');";
-		
-		
-		//run query
-		$dbc->query($que) or die($dbc->error);
-		//get the last auto generated id, needed for insert to the next table
-		$id =mysqli_insert_id($dbc);  
-		
-		//insert to trendingcourses table with no hits by defualts; this table is only for tracking Trending Courses only
-		$hit_query = "INSERT INTO `trendingcourses` (`id` ,`hits`)
-					  VALUES ('$id', '0');";
-					
-		$dbc->query($hit_query) or die($dbc->error);
-		
-		//loop through 2d array, and get all the professors who are teaching the class
-		foreach($prim_prof as $row){ 
-			
-			//get the profesor's name and image 
-			$name = $dbc->real_escape_string($row['name']); 
-			$image= $dbc->real_escape_string($row['image']); 
-			
-			//prepare query for inserting to coursedetails table	  											 
-		    $sql = "INSERT INTO `coursedetails` (`id`, `profname`, `profimage`)
-					VALUES 
-					( '$id', '$name', '$image');" or die($dbc->error);	  
-			
-			//run query		                   
-			$dbc->query($sql) or die($dbc->error);
-		}//end foreach
+		$find_course_sql = "SELECT id, course_link from course_data 
+				WHERE 1 AND course_link='$course_link'";
+		$result = $dbc->query($find_course_sql);
+		if ($result && $result->num_rows) { // course exists
+			$row = $result->fetch_array();
+			$id = $row['id'];
+			$update_course_sql = "UPDATE course_data SET title='$title', short_desc='$short_desc', 
+					long_desc='$long_desc', video_link='$video_link', 
+					start_date='$course_date', course_length='$course_length', course_image='$course_image',
+					category='$category', site='$website'
+					WHERE 1 AND id='$id'";
+			$dbc->query($update_course_sql) or die($dbc->error);
+//			echo $update_course_sql;
+		} 
+		else { // new course
+			//insert to course_data first 
+			$que ="INSERT INTO `course_data` (`id`, `title`, `short_desc`, `long_desc`, `course_link`, `video_link`, 
+					`start_date`, `course_length`, `course_image`, 			`category`, `site`)
+				  VALUES ('0', '$title', '$short_desc', '$long_desc', '$course_link', '$video_link', '$course_date', '$course_length', '$course_image', '$category', '$website');";
 
+
+			//run query
+			$dbc->query($que) or die($dbc->error);
+
+			//get the last auto generated id, needed for insert to the next table
+			$id =mysqli_insert_id($dbc);  
+
+			//insert to trendingcourses table with no hits by defualts; this table is only for tracking Trending Courses only
+			$hit_query = "INSERT INTO `trendingcourses` (`id` ,`hits`)
+						  VALUES ('$id', '0');";
+
+			$dbc->query($hit_query) or die($dbc->error);
+
+			//loop through 2d array, and get all the professors who are teaching the class
+			foreach($prim_prof as $row){ 
+
+				//get the profesor's name and image 
+				$name = $dbc->real_escape_string($row['name']); 
+				$image= $dbc->real_escape_string($row['image']); 
+
+				//prepare query for inserting to coursedetails table	  											 
+				$sql = "INSERT INTO `coursedetails` (`id`, `profname`, `profimage`)
+						VALUES 
+						( '$id', '$name', '$image');" or die($dbc->error);	  
+
+				//run query		                   
+				$dbc->query($sql) or die($dbc->error);
+			}//end foreach
+
+			// insert into new_courses
+			$new_courses_sql = "INSERT INTO new_courses (course_data_id, date_added) VALUES ('$id', now())";
+			$dbc->query($new_courses_sql) or die($dbc->error);
+//			echo $new_courses_sql;
+		} // end else
 }//end function
+
+function removeOldCourses($newUrls, $website)
+{
+	$dbc = $GLOBALS['dbc'];
+	$old_urls_sql = "SELECT id, course_link from course_data 
+						WHERE site='$website'";
+	
+	$result = $dbc->query($old_urls_sql);
+	if ($result && $result->num_rows) {
+		while ($row = $result->fetch_array()) {
+			if (array_search($row['course_link'], $newUrls) === FALSE) {
+				$id = $row['id'];
+				$delete_sql = "DELETE from course_data WHERE id='$id'";
+//				echo $delete_sql;
+				$dbc->query($delete_sql) or die($dbc->error);
+			}
+			
+		}
+	}
+	return;
+}
 
 exit;
 ?>
