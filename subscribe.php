@@ -112,9 +112,9 @@ if (isset($_REQUEST['subscribe']) && ($errors = getFormErrors()) === "") {
 					$key = $row['rand_key'];
 					$link = 'http://www.sjsu-cs.org/cs160/spring2013/sec1group1/cs160proj/verifyEmail.php?email=' 
 						. $email . '&key=' . $key;
-					$message = 'Please confirm you subscription to Kazoom updates by following the link: ';
+					$message = 'Please confirm you subscription to Kazoom updates by following the link: ' . "\r\n\n";
 					$message .= $link;
-					$message .= '. If you do not recognize this subscription, please discregard this email.';
+					$message .= " \r\n\nIf you do not recognize this subscription, please disregard this email.";
 					mail($email, $subject, $message, $headers);
 					echo "You have already subscribed to notifications, but have not verified your email address.
 						A new confirmation email have been sent. Please, click confirmation link in it to 
@@ -130,9 +130,9 @@ if (isset($_REQUEST['subscribe']) && ($errors = getFormErrors()) === "") {
 			
 		$link = 'http://www.sjsu-cs.org/cs160/spring2013/sec1group1/cs160proj/verifyEmail.php?email=' 
 			. $email . '&key=' . $key;
-		$message = 'Please confirm you subscription to Kazoom updates by following the link: ';
+		$message = 'Please confirm you subscription to Kazoom updates by following the link: ' . "\r\n\n";
 		$message .= $link;
-		$message .= '. If you do not recognize this subscription, please discregard this email.';
+		$message .= " \r\n\nIf you do not recognize this subscription, please disregard this email.";
 		
 		mail($email, $subject, $message, $headers);
 		echo "Confirmation email has been sent. Please, click confirmation link in it to verify your email address.";
