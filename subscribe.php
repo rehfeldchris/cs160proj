@@ -38,7 +38,7 @@ function getSites()
 				$checked = "checked";
 			}
 			$ret .= '<label><input name="sites[]" type="checkbox" value="' 
-					. $site .  '" '. $checked . '>' . $site .'</label><br>';
+					. $site .  '" '. $checked . '> ' . $site .'</label><br>';
 		}
 	}
 	return $ret;
@@ -64,13 +64,39 @@ function getFormErrors() {
 <head>
 <title>Kazoom - Email subscription</title>
 <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
-<link rel="stylesheet" href="css/style.css" type="text/css">
+<style type="text/css">
+body {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.subscribe-holder {
+        max-width: 500px;
+        padding: 19px 29px 29px;
+        margin: 0 auto 20px;
+        background-color: lightgrey;
+        border: 1px solid #e5e5e5;
+        -webkit-border-radius: 5px;
+           -moz-border-radius: 5px;
+                border-radius: 5px;
+        -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+           -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+                box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+
+</style>
 </head>
 <body>
- <div class="container">
-	<h3>Subscribe to new courses notification</h3>
-	<hr class="gradientHr">
+	
+ <div class="container-fluid">
+	 <div class="row-fluid">
 
+		<h3 ><a class="muted" href="index.php">KaZoom</a></h3>
+      </div>
+	  
+      <hr />
+	  <div class="subscribe-holder">
+		  <h4 class="subscribe-holder-heading">Subscribe to new courses notifications</h4>
+	<hr />
 <?php
 $errors = '';
 
@@ -140,6 +166,11 @@ if (isset($_REQUEST['subscribe']) && ($errors = getFormErrors()) === "") {
 	}
 	?>
 	</div>
+	<footer>
+	<hr />
+	<p>&copy; San Jose State University</p>
+	</footer>
+	</div>
 	</body>
 	</html>
 	<?php exit();
@@ -153,7 +184,7 @@ if (isset($_REQUEST['subscribe']) && ($errors = getFormErrors()) === "") {
 		 
 			<div class="controls">
 				<input type="text" id="email" name="email" value="<?php echo $_REQUEST['email'] ?>">
-				<p class="text-warning" id="email_error"></p>
+				<p class="text-error" id="email_error"></p>
 			</div>
 		</div>
 		
@@ -162,7 +193,7 @@ if (isset($_REQUEST['subscribe']) && ($errors = getFormErrors()) === "") {
 		 
 			<div class="controls">
 				<?php echo getSites(); ?>
-				<p class="text-warning" id="sites_error"></p>
+				<p class="text-error" id="sites_error"></p>
 			</div>
 		</div>
 		
@@ -181,11 +212,17 @@ if (isset($_REQUEST['subscribe']) && ($errors = getFormErrors()) === "") {
 			
 		</div>
 		<div class="controls">
-				<input type="submit" name="subscribe" value="Subscribe">
+				<input class="btn btn-success" type="submit" name="subscribe" value="Subscribe">
 			</div>
 	</form>
-
 </div>
+	<footer>
+	<hr />
+	<p>&copy; San Jose State University</p>
+	</footer>
+</div>
+
+
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script>

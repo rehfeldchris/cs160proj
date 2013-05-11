@@ -24,12 +24,38 @@ function randString($length, $charset='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmno
 <head>
 <title>Kazoom - Email subscription</title>
 <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
-<link rel="stylesheet" href="css/style.css" type="text/css">
+<style type="text/css">
+body {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.subscribe-holder {
+        max-width: 500px;
+        padding: 19px 29px 29px;
+        margin: 0 auto 20px;
+        background-color: lightgrey;
+        border: 1px solid #e5e5e5;
+        -webkit-border-radius: 5px;
+           -moz-border-radius: 5px;
+                border-radius: 5px;
+        -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+           -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+                box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+
+</style>
 </head>
 <body>
- <div class="container">
-	<h3>Subscribe to new courses notification</h3>
-	<hr class="gradientHr">
+ <div class="container-fluid">
+	 <div class="row-fluid">
+
+		<h3 ><a class="muted" href="index.php">KaZoom</a></h3>
+      </div>
+	  
+      <hr />
+	  <div class="subscribe-holder">
+		  <h4 class="subscribe-holder-heading">Subscribe to new courses notifications</h4>
+	<hr />
 
 <?php
 
@@ -61,6 +87,12 @@ if (isset($_REQUEST['email']) && isset($_REQUEST['key'])) {
 
 }
 ?>
+	Your email has been verified. Thank you.
+	</div>
+	  <footer>
+	<hr />
+	<p>&copy; San Jose State University</p>
+	</footer>
 </div>
 </body>
 </html>
