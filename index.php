@@ -1,14 +1,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf8" />
 <meta name="author" content="Manzoor Ahmed" />
 <title>SEARCH KaZOOM</title>
-
+<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
 <style type="text/css">
-#search, #submit
-{
-	float: left;
+body {
+	padding-top: 10px;
+	padding-bottom: 10px;
 }
 
 #search
@@ -74,12 +74,10 @@
 	 box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;		
 }
 
-#subscribe-link
-{
-	padding-left: 9px;
-	padding-top: 5px;
-	font: bold 14px Arial, Helvetica;
+a {
+	color:green;
 }
+
 </style>
 </head>
 <body>
@@ -98,49 +96,75 @@
  
 require 'connection.php';
 require 'ShowTrendingCourses.php';
-require_once 'OutputSearch.php';
-require_once 'OutputKeywords.php';
+//require_once 'OutputSearch.php';
+require_once 'Keywords.php';
 
 /**
  *index.php is tha main page of the site, and shows all the output from databases
  **/
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-
-if(isset($_POST['submit']))
+$word = "";
+$keywords = new OutputKeywords();
+if(isset($_REQUEST['submit']))
 {
 	//ignore validating for now...
 	
-	$word = $_POST['search'];
-	$output = new OutputSearch();
-	$output->searchResults($word,$dbc=$GLOBALS['dbc']);
+	$word = $_REQUEST['search'];
+	
+	//$output = new OutputSearch();
+	//$output->searchResults($word,$dbc=$GLOBALS['dbc']);
 }//isset
 ?>
-<a id="subscribe-link" href="subscribe.php">Subscribe to notifications</a>
-<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-<table width="100%">
-	<tr>
-	  <td width="33%"><input type="text" name="search" id="search" size="35" value="Search" /><input type="submit" name="submit" id="submit" value="KaZoom It" /></td>
-		<td width="39%"><div style="padding:0px 0px 10px 20px;">
-		<?php
-			$keywords = new OutputKeywords();
-			$keywords->showKeywords($dbc=$GLOBALS['dbc']);			
+	
+	<div class="container-fluid">
+
+      <div class="row-fluid">
+		<a class="pull-right" id="subscribe-link" href="subscribe.php">Subscribe to notifications</a>
+		<h3 class="muted">KaZoom</h3>
+      </div>
+	  
+      <hr />
+
+      <div class="row-fluid">
+			<div class="span7">
+				<form class="form-inline" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="get">
+					<input type="text" name="search" id="search" size="35" placeholder="Search" />
+					<input type="submit" name="submit" id="submit" value="KaZoom It" />
+				</form>
+				<div class="row-fluid"><div class="span12">
+				<?php $keywords->showKeywords($GLOBALS['dbc']); ?>
+					</div></div>
+			</div>
+		<div class="span5">
+			<?php 
+				$trend = new ShowTrendingCourses(); 
+				$trend->showTrendingCourses($dbc =$GLOBALS['dbc']);
 		?>
-		</div></td>
-		<td width="28%"><div id ="search-keywords">
-		<?php 
-		$trend = new ShowTrendingCourses(); 
-		$trend->showTrendingCourses($dbc =$GLOBALS['dbc']);
-		?>
-	  </div></td>
-	</tr>
-</table>
-</form>
+			</div>
+		
+      </div>
+
+      <hr />
 
 <?php
 //prints output table 
 require_once("TableInfo.php");
+$success = printTable($word);
+if ($success) {
+	$keywords->updateKeywords($GLOBALS['dbc'], $word);
+} else {
+	echo '<p class="text-error">' . "No results" . '</p>';
+}
+
 ?>
 
+</div>
+<footer>
+	<hr />
+	<p>&copy; San Jose State University</p>
+    
+</footer>
+	  
 </body>
 </html>
