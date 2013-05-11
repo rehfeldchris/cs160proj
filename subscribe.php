@@ -64,6 +64,7 @@ function getFormErrors() {
 <head>
 <title>Kazoom - Email subscription</title>
 <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+<link rel="stylesheet" href="css/style.css" type="text/css">
 <style type="text/css">
 body {
 	padding-top: 10px;
@@ -73,7 +74,6 @@ body {
         max-width: 500px;
         padding: 19px 29px 29px;
         margin: 0 auto 20px;
-        background-color: lightgrey;
         border: 1px solid #e5e5e5;
         -webkit-border-radius: 5px;
            -moz-border-radius: 5px;
@@ -81,6 +81,9 @@ body {
         -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
            -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
                 box-shadow: 0 1px 2px rgba(0,0,0,.05);
+                
+        background-color: #efefef;
+        box-shadow: 2px 3px 9px 2px rgba(0, 0, 0, 0.3);
 }
 
 </style>
@@ -93,10 +96,11 @@ body {
 		<h3 ><a class="muted" href="index.php">KaZoom</a></h3>
       </div>
 	  
-      <hr />
+      <hr class="gradientHr">
 	  <div class="subscribe-holder">
-		  <h4 class="subscribe-holder-heading">Subscribe to new courses notifications</h4>
-	<hr />
+		  <h4 class="subscribe-holder-heading">Subscribe to new course notifications</h4>
+          <p>We'll send you an email whenever we find new courses.</p>
+	<hr class="gradientHr">
 <?php
 $errors = '';
 
@@ -167,7 +171,7 @@ if (isset($_REQUEST['subscribe']) && ($errors = getFormErrors()) === "") {
 	?>
 	</div>
 	<footer>
-	<hr />
+	<hr class="gradientHr">
 	<p>&copy; San Jose State University</p>
 	</footer>
 	</div>
@@ -183,7 +187,7 @@ if (isset($_REQUEST['subscribe']) && ($errors = getFormErrors()) === "") {
 		 <label class="control-label" for="email">Email</label>
 		 
 			<div class="controls">
-				<input type="text" id="email" name="email" value="<?php echo $_REQUEST['email'] ?>">
+				<input type="text" id="email" name="email" value="<?php echo @$_REQUEST['email'] ?>">
 				<p class="text-error" id="email_error"></p>
 			</div>
 		</div>
@@ -202,9 +206,9 @@ if (isset($_REQUEST['subscribe']) && ($errors = getFormErrors()) === "") {
 			<div class="controls">
 				<select name="freq">
 				<option id="w" value="w" 
-					<? if($_REQUEST['freq'] === "w") echo "selected"; ?>>Weekly</option>
+					<?php if(@$_REQUEST['freq'] === "w") echo "selected"; ?>>Weekly</option>
 				<option id="d" value="d" 
-					<? if($_REQUEST['freq'] === "d") echo "selected"; ?>>Daily</option>
+					<?php if(@$_REQUEST['freq'] === "d") echo "selected"; ?>>Daily</option>
 				
 				</select>
 				
@@ -217,7 +221,7 @@ if (isset($_REQUEST['subscribe']) && ($errors = getFormErrors()) === "") {
 	</form>
 </div>
 	<footer>
-	<hr />
+	<hr class="gradientHr">
 	<p>&copy; San Jose State University</p>
 	</footer>
 </div>
