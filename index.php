@@ -1,174 +1,293 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<?php
+header('content-type: text/html;charset=utf-8');
+require_once 'connection.php';
+require_once 'Pager/Pager.php';
+require_once 'helperFunctions.php';
+
+$search = '';
+$pagerLinks = '';
+$searchResults = array();
+
+$search = isset($_GET['search']) && is_string($_GET['search']) ? $_GET['search'] : '';
+
+
+// split the string into words based on word boundaries(transitions between word charaters and punctuation/whitespace)
+$words = array();
+foreach (preg_split('~\W+~', $search) as $word) {
+    //filter out short stuff
+    if (strlen($word) > 1) {
+        $words[] = $word;
+    }
+}
+
+//if any words are present after filtering/processing
+if ($words) {
+    foreach ($words as $word) {
+        recordKeywordSearch($dbc, $word);
+    }
+    $rows = getSearchResults($dbc, $words);
+    $pager = @Pager::factory(array(
+        'mode'       => 'Sliding',
+        'perPage'    => 10,
+        'delta'      => 2,
+        'itemData'   => $rows
+    ));
+    $searchResults = $pager->getPageData();
+    $pagerLinks = $pager->links;
+}
+
+
+$trendingCourses = getTrendingCourses($dbc, 4);
+$trendingKeywords = getTrendingKeywords($dbc, 4);
+
+
+
+?>
+<!doctype html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf8" />
-<meta name="author" content="Manzoor Ahmed" />
-<title>SEARCH KaZOOM</title>
+<title>Kazoom - Search</title>
 <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
-<style type="text/css">
-body {
-	padding-top: 10px;
-	padding-bottom: 10px;
+<link rel="stylesheet" href="css/style.css" type="text/css">
+<style>
+#searchForm {
+    width: 600px;
+    margin: auto;
+}
+#container {
+    width: 80%;
+    margin: auto;
+}
+
+.pagerLinks {
+    text-align: right;
 }
 
 #search
 {
-	height: 30px;
-	width: 300px;
-	border: 1px solid #a4c3ca;
-	font: normal 13px 'trebuchet MS', arial, helvetica;
-	background: #f1f1f1;
-	
-	-moz-border-radius: 50px 3px 3px 50px;
-	border-radius: 50px 3px 3px 50px;
-	 -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) inset, 0 1px 0 rgba(255, 255, 255, 1);
-	 -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) inset, 0 1px 0 rgba(255, 255, 255, 1);
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) inset, 0 1px 0 rgba(255, 255, 255, 1);
-	padding-top: 5px;
-	padding-right: 9px;
-	padding-bottom: 5px;
-	padding-left: 9px;
+    height: 30px;
+    width: 300px;
+    border: 1px solid #a4c3ca;
+    font: normal 13px 'trebuchet MS', arial, helvetica;
+    background: #f1f1f1;
+    border-radius: 50px 3px 3px 50px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) inset, 0 1px 0 rgba(255, 255, 255, 1);
+    padding-top: 5px;
+    padding-right: 9px;
+    padding-bottom: 5px;
+    padding-left: 9px;
 }
 
 #submit
 {
-	background: #6cbb6b;
-	background-image: -moz-linear-gradient(#95d788, #6cbb6b);
-	background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0, #6cbb6b),color-stop(1, #95d788));
-	
-	-moz-border-radius: 1px 20px 20px 1px;
-	border-radius: 3px 50px 50px 3px;
-	border-width: 1px;
-	border-style: solid;
-	border-color: #7eba7c #578e57 #447d43;
-	
-	 -moz-box-shadow: 0 0 1px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.3) inset;
-	 -webkit-box-shadow: 0 0 1px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.3) inset;
-	box-shadow: 0 0 1px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.3) inset;
-	height: 40px;
-	padding: 0;
-	width: 100px;
-	cursor: pointer;
-	font: bold 14px Arial, Helvetica;
-	color: #23441e;
-	text-shadow: 0 1px 0 rgba(255,255,255,0.5);
-	margin-top: 0;
-	margin-right: 0;
-	margin-bottom: 0;
-	margin-left: 10px;
+    background: #6cbb6b;
+    background-image: -moz-linear-gradient(#95d788, #6cbb6b);
+    background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0, #6cbb6b),color-stop(1, #95d788));
+
+    -moz-border-radius: 1px 20px 20px 1px;
+    border-radius: 3px 50px 50px 3px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #7eba7c #578e57 #447d43;
+
+     -moz-box-shadow: 0 0 1px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.3) inset;
+     -webkit-box-shadow: 0 0 1px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.3) inset;
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.3) inset;
+    height: 40px;
+    padding: 0;
+    width: 100px;
+    cursor: pointer;
+    font: bold 14px Arial, Helvetica;
+    color: #23441e;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 10px;
 }
 
 #submit:hover
 {		
-	background: #95d788;
-	background-image: -moz-linear-gradient(#6cbb6b, #95d788);
-	background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0, #95d788),color-stop(1, #6cbb6b));
+    background: #95d788;
+    background-image: -moz-linear-gradient(#6cbb6b, #95d788);
+    background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0, #95d788),color-stop(1, #6cbb6b));
 }	
 
 #submit:active
 {		
-	background: #95d788;
-	outline: none;
-	 -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;
-	 -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;
-	 box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;		
+    background: #95d788;
+    outline: none;
+     -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;
+     -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;
+     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;		
 }
 
-a {
-	color:green;
+
+.professor-image {
+    width: 100px;
+    height: 100px;
+    box-shadow: 2px 3px 9px 2px rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+}
+.course-image {
+    width: 200px;
+    height: 100px;
+    box-shadow: 2px 3px 9px 2px rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
 }
 
-a:hover,a:focus {
-	color:darkseagreen;
+.course-summary {
+    position:relative;
+    float: left;
+    margin: 20px;
+    width: 500px;
+    height: 300px;
+    background-color: #efefef;
+    box-shadow: 2px 3px 9px 2px rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
 }
+
+.hoverable-link:hover {
+    background-color: #fff;
+    cursor: pointer;
+    box-shadow: 2px 3px 9px 2px rgba(0, 215, 255, 0.3);
+    transition: all 0.2s ease-out;
+}
+
+.course-description {
+    font-size: 90%;
+}
+
+.course-summary .leftCol, .course-summary .rightCol  {
+    padding: 10px;
+}
+.course-summary .rightCol {
+    width: 300px;
+    position: absolute;
+    top: 0px;
+    left:200px;
+}
+
+.course-summary .leftCol {
+    width: 200px;
+}
+.course-summary .rightCol {
+    width: 240px;
+    position: absolute;
+    top: 0px;
+    left:220px;
+}
+
+.course-title {
+    margin-top: 1em;
+    text-align: center;
+}
+
 
 </style>
 </head>
 <body>
-<?php 
+    <div id="container">
+        <div class="row-fluid">
+            <a class="pull-right" id="subscribe-link" href="subscribe.php">Subscribe to notifications</a>
+            <h3><a class="muted" href="index.php">KaZoom</a></h3>
+        </div>
 
-/**
- * @Author Manzoor Ahmed 
- * @Author Andrey Andreev
- * @Author 
- * @Author
- * Through this seach bar user can search the database
- * We first look in `keywords` table, no result, then we search the `course_data` table
- * we grab all the results and inset it into `keywords` for faster access
- * and for each search keyword, we increment the hit
- **/
- 
-require 'connection.php';
-require 'ShowTrendingCourses.php';
-//require_once 'OutputSearch.php';
-require_once 'Keywords.php';
+        <div class="container-fluid">
+          <div class="row">
+            <div class="span6">
+                <form id="searchForm" class="form-inline" method="get" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8'); ?>">
+                    <h5>Search for courses</h5>
+                    <p><input name="search" id="search" placeholder="Enter keywords" autofocus required value="<?php echo htmlspecialchars($search, ENT_QUOTES, 'UTF-8'); ?>"> 
+                       <input type="submit" id="submit" value="KaZoom It"></p>
+                </form>
+            </div>
+            <div class="span2 pull-right">
+                <h5>Trending Keywords</h5>
+                <ul>
+                    <?php foreach ($trendingKeywords as $word) { ?>
+                    <li><?php printf('<a href="?search=%1$s">%1$s</a>', htmlspecialchars($word, ENT_QUOTES, 'UTF-8')); ?></li>
+                    <?php } ?>
+                </ul>
+            </div>
+            <div class="span4  pull-right">
+                <h5>Trending Courses</h5>
+                <ul>
+                    <?php foreach ($trendingCourses as $course) { ?>
+                    <li><?php printf('<a href="courseDetail.php?courseId=%d">%s</a>', $course['id'], htmlspecialchars($course['title'], ENT_QUOTES, 'UTF-8')); ?></li>
+                    <?php } ?>
+                </ul>
+            </div>
+          </div>
+        </div>
+        
+        <?php if ($searchResults) { ?>
+        <div id="searchResults">
+            <div class="pagerLinks">
+                <hr class="gradientHr">
+                <?php echo $pagerLinks; ?>
+            </div>
 
-/**
- *index.php is tha main page of the site, and shows all the output from databases
- **/
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-$word = "";
-$keywords = new OutputKeywords();
-if(isset($_REQUEST['submit']))
-{
-	//ignore validating for now...
-	
-	$word = $_REQUEST['search'];
-	
-	//$output = new OutputSearch();
-	//$output->searchResults($word,$dbc=$GLOBALS['dbc']);
-}//isset
-?>
-	
-	<div class="container-fluid">
+            
+            <div>
 
-      <div class="row-fluid">
-		<a class="pull-right" id="subscribe-link" href="subscribe.php">Subscribe to notifications</a>
-		<h3><a class="muted" href="index.php">KaZoom</a></h3>
-      </div>
-	  
-      <hr />
+                <?php foreach($searchResults as $course) { ?>
+                <div class="course-summary">
+                    <div class="leftCol">
+                        <div class="course-image">
+                            <a class="course-detail-link" href="courseDetail.php?courseId=<?php echo $course['id']; ?>">
+                                <img class="course-image" src="<?php echo htmlspecialchars($course['course_image'], ENT_QUOTES, 'UTF-8'); ?>">
+                            </a>
+                        </div>
+                        <div class="course-title">
+                            <a href="courseDetail.php?courseId=<?php echo $course['id']; ?>">
+                                <?php echo htmlspecialchars($course['title'], ENT_QUOTES, 'UTF-8'); ?>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="rightCol">
+                        <div class="course-description">
+                            <?php echo htmlspecialchars(substr(strip_tags($course['short_desc']), 0, 200), ENT_QUOTES, 'UTF-8'); ?>…
+                        </div>
+                        <div class="course-instructor">
+                            <?php
+                            if ($course['profimage']) {
+                                printf('<img class="professor-image" src="%s">', htmlspecialchars($course['profimage'], ENT_QUOTES, 'UTF-8'));
+                            }
+                            if ($course['profname']) {
+                                printf("<div>%s</div>", htmlspecialchars($course['profname'], ENT_QUOTES, 'UTF-8'));
+                            }
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                <?php } ?>
+                
+                <div style="clear: both;"></div>
+            </div>
+            
 
-      <div class="row-fluid">
-			<div class="span7">
-				<form class="form-inline" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="get">
-					<input type="text" name="search" id="search" size="35" placeholder="Search" />
-					<input type="submit" name="submit" id="submit" value="KaZoom It" />
-				</form>
-				<div class="row-fluid"><div class="span12">
-				<?php $keywords->showKeywords($GLOBALS['dbc']); ?>
-					</div></div>
-			</div>
-		<div class="span5">
-			<?php 
-				$trend = new ShowTrendingCourses(); 
-				$trend->showTrendingCourses($dbc =$GLOBALS['dbc']);
-		?>
-			</div>
-		
-      </div>
 
-      <hr />
+            <div class="pagerLinks">
+                <?php echo $pagerLinks; ?>
+                <hr class="gradientHr">
+            </div>
+        </div>
+        <?php } ?>
 
-<?php
-//prints output table 
-require_once("TableInfo.php");
-$success = printTable($word);
-if ($success) {
-	$keywords->updateKeywords($GLOBALS['dbc'], $word);
-} else {
-	echo '<p class="text-error">' . "No results" . '</p>';
-}
+        <footer>
+            <p>&copy; San Jose State University</p>
+        </footer>
+    </div>
 
-?>
-
-</div>
-<footer>
-	<hr />
-	<p>&copy; San Jose State University</p>
-    
-</footer>
-	  
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+$(function(){
+    $(".course-summary")
+    .addClass("hoverable-link")
+    .click(function(){
+        document.location = $(".course-detail-link", this).attr("href");
+    });
+});
+</script>
 </body>
 </html>
