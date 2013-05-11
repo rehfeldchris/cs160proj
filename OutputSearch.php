@@ -1,9 +1,9 @@
 <?php
 
 /*
- *OutputSearch is used for searching in tables, and prints all the result data
- *@ Author Manzoor Ahmed
+ *This class finds what the user types in the search bar, and  outputs the results
  *
+ *@ Author Manzoor Ahmed
  **/
 
 class OutputSearch{
