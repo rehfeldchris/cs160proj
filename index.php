@@ -8,7 +8,9 @@ $search = '';
 $pagerLinks = '';
 $searchResults = array();
 
-$search = isset($_GET['search']) && is_string($_GET['search']) ? $_GET['search'] : '';
+$search = isset($_GET['search']) && is_string($_GET['search'])
+        ? (get_magic_quotes_gpc() ? stripslashes($_GET['search']) : $_GET['search'])
+        : '';
 
 
 // split the string into words based on word boundaries(transitions between word charaters and punctuation/whitespace)
