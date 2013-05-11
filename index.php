@@ -78,6 +78,10 @@ a {
 	color:green;
 }
 
+a:hover,a:focus {
+	color:darkseagreen;
+}
+
 </style>
 </head>
 <body>
@@ -121,7 +125,7 @@ if(isset($_REQUEST['submit']))
 
       <div class="row-fluid">
 		<a class="pull-right" id="subscribe-link" href="subscribe.php">Subscribe to notifications</a>
-		<h3 class="muted">KaZoom</h3>
+		<h3><a class="muted" href="index.php">KaZoom</a></h3>
       </div>
 	  
       <hr />

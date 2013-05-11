@@ -12,7 +12,7 @@ var $maxShow =5;    //show only 5 rows
 
 	function showKeywords($dbc){
 	
-	$query = $dbc->real_escape_string("SELECT * from `keywords` WHERE `hits` >= 5 ORDER BY hits ASC LIMIT 5;");	
+	$query = $dbc->real_escape_string("SELECT * from `keywords` WHERE `hits` >= 5 ORDER BY hits DESC LIMIT 5;");	
 	$query_run = $dbc->query($query) or die($dbc->error);
 	//echo $query;
 		if($query_run){
@@ -21,7 +21,8 @@ var $maxShow =5;    //show only 5 rows
 					
 			while($row = mysqli_fetch_array($query_run)){
 					
-					echo '<a href="index.php?search='. $row[1] . '&submit=KaZoom+It">' . $row[1] . "</a> ";
+					echo '<a style="text-decoration:underline;" href="index.php?search='. 
+							$row[1] . '&submit=KaZoom+It">' . $row[1] . "</a> ";
 			}	
 			echo "</div>";
 		
