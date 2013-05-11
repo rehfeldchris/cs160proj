@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `keywords` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
-CREATE TABLE `searched_words` (
+CREATE TABLE IF NOT EXISTS `searched_words` (
 	`word` VARCHAR(255) NOT NULL,
 	`when_searched` DATETIME NOT NULL
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
