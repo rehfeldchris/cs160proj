@@ -24,9 +24,7 @@ foreach (preg_split('~\W+~', $search) as $word) {
 
 //if any words are present after filtering/processing
 if ($words) {
-    foreach ($words as $word) {
-        recordKeywordSearch($dbc, $word);
-    }
+    
     $rows = getSearchResults($dbc, $words);
     $pager = @Pager::factory(array(
         'mode'       => 'Sliding',
@@ -35,6 +33,11 @@ if ($words) {
         'itemData'   => $rows
     ));
     $searchResults = $pager->getPageData();
+	if ($searchResults) {
+		foreach ($words as $word) {
+			recordKeywordSearch($dbc, $word);
+		}
+	}
     $pagerLinks = $pager->links;
 }
 
