@@ -50,6 +50,7 @@ $trendingKeywords = getTrendingKeywords($dbc, 4);
 <title>Kazoom - Search</title>
 <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
 <link rel="stylesheet" href="css/style.css" type="text/css">
+<link rel="stylesheet" href="css/jquery-ui-1.10.3.custom.min.css" type="text/css">
 <style>
 #searchForm {
     width: 600px;
@@ -184,7 +185,6 @@ $trendingKeywords = getTrendingKeywords($dbc, 4);
     text-align: center;
 }
 
-
 </style>
 </head>
 <body>
@@ -282,6 +282,8 @@ $trendingKeywords = getTrendingKeywords($dbc, 4);
     </div>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="js/autoSuggest/jquery.autoSuggest.minified.js"></script>
+<script src="js/jquery-ui/js/jquery-ui-1.10.3.custom.min.js"></script>
 <script>
 $(function(){
     $(".course-summary")
@@ -289,6 +291,57 @@ $(function(){
     .click(function(){
         document.location = $(".course-detail-link", this).attr("href");
     });
+    
+    
+    
+    //from http://jqueryui.com/autocomplete/#multiple
+    $.getJSON('autoSuggestWords.php', function(availableTags) {
+
+        function split( val ) {
+          return val.split( /\s+/ );
+        }
+        function extractLast( term ) {
+          return split( term ).pop();
+        }
+
+        $("#search")
+          // don't navigate away from the field on tab when selecting an item
+          .bind( "keydown", function( event ) {
+            if ( event.keyCode === $.ui.keyCode.TAB &&
+                $( this ).data( "ui-autocomplete" ).menu.active ) {
+              event.preventDefault();
+            }
+          })
+          .autocomplete({
+            minLength: 1,
+            delay: 0,
+            source: function( request, response ) {
+              // delegate back to autocomplete, but extract the last term
+              var searchTerm = extractLast(request.term).toLowerCase();
+              var matches = $.grep(availableTags, function(val){
+                  return val.indexOf(searchTerm) == 0;
+              }).slice(0, 5);
+
+              response( matches );
+            },
+            focus: function() {
+              // prevent value inserted on focus
+              return false;
+            },
+            select: function( event, ui ) {
+              var terms = split( this.value);
+              // remove the current input
+              terms.pop();
+              // add the selected item
+              terms.push( ui.item.value );
+              // add placeholder to get the comma-and-space at the end
+              terms.push( "" );
+              this.value = terms.join( " " );
+              return false;
+            }
+          });
+    });
+
 });
 </script>
 </body>

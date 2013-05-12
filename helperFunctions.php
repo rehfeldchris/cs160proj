@@ -129,15 +129,6 @@ function getSearchResults($dbc, $words) {
 
     $stmt->execute();
 
-    function fetch_array($stmt) {
-        $fields = $out = array();
-        foreach($stmt->result_metadata()->fetch_fields() as $field) {
-            $fields[] = &$out[$field->name];
-        }
-        call_user_func_array(array($stmt, 'bind_result'), $fields);
-        return $stmt->fetch() ? $out : false;
-    }
-
 
     $rows = array();
     $row = array();
@@ -146,4 +137,60 @@ function getSearchResults($dbc, $words) {
     }
     
     return $rows;
+}
+
+
+function getAutoSuggestWords($dbc) {
+    $sql = "
+        select title
+             , short_desc
+             , long_desc
+             , category
+          from course_data
+    ";
+    $result = $dbc->query($sql);
+    $words = array();
+    while ($row = $result->fetch_assoc()) {
+        $words = array_merge(
+            $words
+          , preg_split('~\W+~', $row['title'])
+          , preg_split('~\W+~', strip_tags($row['short_desc']))
+          , preg_split('~\W+~', strip_tags($row['long_desc']))
+          , preg_split('~\W+~', $row['category'])
+        );
+        
+    }
+    
+        $utf8Pattern = '/\A(
+     [\x09\x0A\x0D\x20-\x7E]
+   | [\xC2-\xDF][\x80-\xBF]
+   |  \xE0[\xA0-\xBF][\x80-\xBF]
+   | [\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}
+   |  \xED[\x80-\x9F][\x80-\xBF]
+   |  \xF0[\x90-\xBF][\x80-\xBF]{2}
+   | [\xF1-\xF3][\x80-\xBF]{3}
+   |  \xF4[\x80-\x8F][\x80-\xBF]{2}
+  )*\z/x';
+
+    $filteredWords = array();
+    foreach (array_unique($words) as $word) {
+        //json_encode() is very picky about invalid utf8 characters(it totally fails). well just skip any words with invalid utf8.
+        if (strlen($word) > 3 && preg_match($utf8Pattern, $word)) {
+            $filteredWords[] = strtolower($word);
+        }
+    }
+    return $filteredWords;
+}
+
+
+
+
+
+function fetch_array($stmt) {
+    $fields = $out = array();
+    foreach($stmt->result_metadata()->fetch_fields() as $field) {
+        $fields[] = &$out[$field->name];
+    }
+    call_user_func_array(array($stmt, 'bind_result'), $fields);
+    return $stmt->fetch() ? $out : false;
 }
