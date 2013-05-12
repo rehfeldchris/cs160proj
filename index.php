@@ -295,7 +295,9 @@ $(function(){
     
     //from http://jqueryui.com/autocomplete/#multiple
     $.getJSON('autoSuggestWords.php', function(availableTags) {
-
+        availableTags = availableTags.map(function(val){
+            return val.toLowerCase();
+        });
         function split( val ) {
           return val.split( /\s+/ );
         }

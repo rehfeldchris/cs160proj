@@ -8,6 +8,5 @@ require_once 'connection.php';
 require_once 'helperFunctions.php';
 
 
-
 $words = getAutoSuggestWords($dbc);
 echo json_encode($words);
