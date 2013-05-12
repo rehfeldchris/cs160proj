@@ -8,5 +8,16 @@ require_once 'connection.php';
 require_once 'helperFunctions.php';
 
 
+$cacheFilename = 'autoSuggestWordsCache.json';
+$cacheLifetimeSeconds = 600;
+
+if (file_exists($cacheFilename) && is_readable($cacheFilename) && time() - filemtime($cacheFilename) > $cacheLifetimeSeconds) {
+	readfile($cacheFilename);
+	exit;
+}
+
+
 $words = getAutoSuggestWords($dbc);
-echo json_encode($words);
+$json = json_encode($words);
+file_put_contents($cacheFilename, $json);
+echo $json;
