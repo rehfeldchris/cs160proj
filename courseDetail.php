@@ -156,8 +156,7 @@ $stmt->free_result();
         text-align: left;
     }
     
-    
-    
+	
     #courseData {
         margin: 1em;
         padding: 1em;
@@ -189,6 +188,24 @@ $stmt->free_result();
         -khtml-border-radius: 5px;
         -webkit-border-radius: 5px;
     }
+	.professor-image {
+		height:200px;
+		overflow: hidden;
+		width:200px;
+		-webkit-box-shadow:0 0 20px rgba(0,0,0,0.8);
+			-moz-box-shadow:0 0 20px rgba(0,0,0,0.8);
+			box-shadow:0 0 20px rgba(0,0,0,0.8);
+			border-radius: 5px;
+			-moz-border-radius: 5px;
+			-khtml-border-radius: 5px;
+			-webkit-border-radius: 5px;
+}
+
+	.professor-image img{
+		display:block;
+		min-height:100%;
+		max-width:100%;
+	}
     
 </style>
 </head>
@@ -247,7 +264,9 @@ $stmt->free_result();
             <?php foreach ($professors as $entry) { ?>
                 <li><p><?php
                     if ($entry['profimage']) {
-                        printf('<img class="blingBlingImage" src="%s"><br>', $entry['profimage']);
+						?><div class="professor-image"><?php
+                        printf('<img  src="%s"><br>', $entry['profimage']);
+						?></div><?php
                     }
                     echo escape($entry['profname']); 
                     ?>

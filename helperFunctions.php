@@ -94,6 +94,7 @@ function getSearchResults($dbc, $words) {
              , start_date
              , course_link
              , id
+			 , course_length
              , profname
              , profimage
              , site
