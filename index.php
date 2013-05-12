@@ -24,9 +24,7 @@ foreach (preg_split('~\W+~', $search) as $word) {
 
 //if any words are present after filtering/processing
 if ($words) {
-    foreach ($words as $word) {
-        recordKeywordSearch($dbc, $word);
-    }
+    
     $rows = getSearchResults($dbc, $words);
     $pager = @Pager::factory(array(
         'mode'       => 'Sliding',
@@ -35,6 +33,11 @@ if ($words) {
         'itemData'   => $rows
     ));
     $searchResults = $pager->getPageData();
+	if ($searchResults) {
+		foreach ($words as $word) {
+			recordKeywordSearch($dbc, $word);
+		}
+	}
     $pagerLinks = $pager->links;
 }
 
@@ -126,11 +129,20 @@ $trendingKeywords = getTrendingKeywords($dbc, 4);
 
 
 .professor-image {
-    width: 100px;
-    height: 100px;
+	margin-top: 1em;
+	height:100px;
+	overflow: hidden;
+	width:100px;
     box-shadow: 2px 3px 9px 2px rgba(0, 0, 0, 0.3);
     border-radius: 5px;
 }
+
+.professor-image img{
+	display:block;
+	min-height:100%;
+	max-width:100%;
+}
+
 .course-image {
     width: 200px;
     height: 100px;
@@ -183,6 +195,12 @@ $trendingKeywords = getTrendingKeywords($dbc, 4);
 .course-title {
     margin-top: 1em;
     text-align: center;
+}
+
+.course-time {
+    margin-top: 1em;
+    text-align: center;
+	font-size: 90%;
 }
 
 </style>
@@ -245,6 +263,20 @@ $trendingKeywords = getTrendingKeywords($dbc, 4);
                                 <?php echo htmlspecialchars($course['title'], ENT_QUOTES, 'UTF-8'); ?>
                             </a>
                         </div>
+						<div class="course-time">
+                            <p>
+                                <?php  
+								$dt = new Datetime($course['start_date'] );
+								if ($dt->format('Y') < 2000) {
+									 //echo "Start date: N/A";
+								} else {
+									echo "Start date: " . $dt->format('M jS, Y');
+								} ?>
+							</p>
+							<p>
+                                <?php echo $course['course_length'] != 0 ? $course['course_length'] . " weeks" : ""; ?>
+                            </p>
+                        </div>
                     </div>
                     <div class="rightCol">
                         <div class="course-description">
@@ -252,8 +284,11 @@ $trendingKeywords = getTrendingKeywords($dbc, 4);
                         </div>
                         <div class="course-instructor">
                             <?php
+							
                             if ($course['profimage']) {
-                                printf('<img class="professor-image" src="%s">', htmlspecialchars($course['profimage'], ENT_QUOTES, 'UTF-8'));
+								?><div class="professor-image"><?php
+                                printf('<img src="%s">', htmlspecialchars($course['profimage'], ENT_QUOTES, 'UTF-8'));
+								?></div><?php
                             }
                             if ($course['profname']) {
                                 printf("<div>%s</div>", htmlspecialchars($course['profname'], ENT_QUOTES, 'UTF-8'));
