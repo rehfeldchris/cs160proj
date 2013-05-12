@@ -282,7 +282,6 @@ $trendingKeywords = getTrendingKeywords($dbc, 4);
     </div>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script src="js/autoSuggest/jquery.autoSuggest.minified.js"></script>
 <script src="js/jquery-ui/js/jquery-ui-1.10.3.custom.min.js"></script>
 <script>
 $(function(){
