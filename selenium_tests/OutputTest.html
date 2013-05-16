@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://www.sjsu-cs.org/cs160/spring2013/sec1group1" />
+<title>OutputTest</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">OutputTest</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/cs160/spring2013/sec1group1/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=search</td>
+	<td>mac</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=search</td>
+	<td>machine learning</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForFrameToLoad</td>
+	<td>css=div.course-description</td>
+	<td>50000</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>css=div.course-title</td>
+	<td>css=div.course.tile</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>link=Machine Learning</td>
+	<td>link=Machine Learning</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
