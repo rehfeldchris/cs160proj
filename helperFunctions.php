@@ -1,13 +1,13 @@
 <?php
 
-/*
+/**
  *helperFunctions.php gets trending courses, and trending course  from the database
  *and outputs on on the index.php page.
  *
  *@Author  Christopher Rehfeld
  */
  
- /*
+ /**
   *getTrendingKeywords find trending keywords
   *@parm $dbc, global dbc connection
   *@param $howMany, number of trending keywords to return
@@ -30,7 +30,7 @@ function getTrendingKeywords($dbc, $howMany) {
     return $words;
 }
 
- /*
+ /**
   *getTrendingCourses find trending keywords
   *@parm $dbc, global dbc connection
   *@param $howMany, number of trending keywords to return
@@ -55,7 +55,7 @@ function getTrendingCourses($dbc, $howMany) {
     return $rows;
 }
 
- /*
+ /**
   *recordKeywordSearch records a searched word in searched_words table
   *@param $dbc, global dbc connection
   *@param $word, the string user searched for
@@ -70,7 +70,7 @@ function recordKeywordSearch($dbc, $word) {
     $stmt->execute();
 }
 
-/*
+/**
  *getSearchResults searches for a string in tables
  *$dbc, global connection
  *$words, users searched input
