@@ -140,7 +140,7 @@ if (isset($_REQUEST['subscribe']) && ($errors = getFormErrors()) === "") {
 					WHERE email = '$email'";
 					$dbc->query($que);
 					$key = $row['rand_key'];
-					$link = 'http://www.sjsu-cs.org/cs160/spring2013/sec1group1/cs160proj/verifyEmail.php?email=' 
+					$link = 'http://www.sjsu-cs.org/cs160/spring2013/sec1group1/verifyEmail.php?email=' 
 						. $email . '&key=' . $key;
 					$message = 'Please confirm you subscription to Kazoom updates by following the link: ' . "\r\n\n";
 					$message .= $link;
@@ -158,7 +158,7 @@ if (isset($_REQUEST['subscribe']) && ($errors = getFormErrors()) === "") {
 			  VALUES ('$email', '$key', '0', '$freq', now(), '$site_options', '1');";
 		$dbc->query($que) or die($dbc->error);
 			
-		$link = 'http://www.sjsu-cs.org/cs160/spring2013/sec1group1/cs160proj/verifyEmail.php?email=' 
+		$link = 'http://www.sjsu-cs.org/cs160/spring2013/sec1group1/verifyEmail.php?email=' 
 			. $email . '&key=' . $key;
 		$message = 'Please confirm you subscription to Kazoom updates by following the link: ' . "\r\n\n";
 		$message .= $link;

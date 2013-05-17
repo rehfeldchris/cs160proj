@@ -87,7 +87,6 @@ if (isset($_REQUEST['email']) && isset($_REQUEST['key'])) {
 
 }
 ?>
-	Your email has been verified. Thank you.
 	</div>
 	  <footer>
 	<hr />
