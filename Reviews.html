@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://www.sjsu-cs.org/cs160/spring2013/sec1group1" />
+<title>Reviews</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Reviews</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>http://www.sjsu-cs.org/cs160/spring2013/sec1group1/index.php?search=computer</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Kazoom - Search</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Quantum Mechanics and Quantum Computation</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Quantum Mechanics and Quantum Computation</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=message</td>
+	<td>this is a review</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=input[type=&quot;submit&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForFrameToLoad</td>
+	<td>css=div.box.effect7</td>
+	<td>50000</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
