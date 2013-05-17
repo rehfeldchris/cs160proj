@@ -1,5 +1,17 @@
 <?php
 
+/*
+ *helperFunctions.php gets trending courses, and trending course  from the database
+ *and outputs on on the index.php page.
+ *
+ *@Author  Christopher Rehfeld
+ */
+ 
+ /*
+  *getTrendingKeywords find trending keywords
+  *@parm $dbc, global dbc connection
+  *@param $howMany, number of trending keywords to return
+  **/
 function getTrendingKeywords($dbc, $howMany) {
     $format = "
     select word
@@ -18,6 +30,11 @@ function getTrendingKeywords($dbc, $howMany) {
     return $words;
 }
 
+ /*
+  *getTrendingCourses find trending keywords
+  *@parm $dbc, global dbc connection
+  *@param $howMany, number of trending keywords to return
+  **/
 function getTrendingCourses($dbc, $howMany) {
     $format = "
     select id
@@ -38,6 +55,11 @@ function getTrendingCourses($dbc, $howMany) {
     return $rows;
 }
 
+ /*
+  *recordKeywordSearch records a searched word in searched_words table
+  *@param $dbc, global dbc connection
+  *@param $word, the string user searched for
+  */
 function recordKeywordSearch($dbc, $word) {
     $sql = "
         insert into searched_words
@@ -48,19 +70,11 @@ function recordKeywordSearch($dbc, $word) {
     $stmt->execute();
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+/*
+ *getSearchResults searches for a string in tables
+ *$dbc, global connection
+ *$words, users searched input
+ **/
 function getSearchResults($dbc, $words) {
 
     /**
@@ -107,8 +121,6 @@ function getSearchResults($dbc, $words) {
          group
             by id";
 
-
-
     $stmt = $dbc->prepare($sql);
 
     $valsToBind = array();
@@ -124,7 +136,6 @@ function getSearchResults($dbc, $words) {
         $refs[$key] =& $valsToBind[$key];
     }
 
-
     $args = array_merge(array(str_repeat('s', count($refs))), $refs);
     call_user_func_array(array($stmt, 'bind_param'), $args);
 
@@ -139,8 +150,10 @@ function getSearchResults($dbc, $words) {
     
     return $rows;
 }
-
-
+/**
+ *getAutoSuggestWords, shows auto suggestions as the user types
+ *@param $dbc, global connection
+ */
 function getAutoSuggestWords($dbc) {
     $sql = "
         select title
@@ -164,7 +177,6 @@ function getAutoSuggestWords($dbc) {
         
     }
     
-
     $utf8Pattern = '%^(?:
       [\x09\x0A\x0D\x20-\x7E]            # ASCII
     | [\xC2-\xDF][\x80-\xBF]             # non-overlong 2-byte
@@ -185,10 +197,6 @@ function getAutoSuggestWords($dbc) {
     }
     return $filteredWords;
 }
-
-
-
-
 
 function fetch_array($stmt) {
     $fields = $out = array();
