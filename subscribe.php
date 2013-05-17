@@ -13,6 +13,12 @@ require_once 'connection.php';
 
 $dbc = $GLOBALS['dbc'];
 
+ /**
+  * Creates random string of requested length
+  *@param int $length required length 
+  *@param string $charset chars to choose from
+  *@return string random string
+  **/
 function randString($length, $charset='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789')
 {
     $str = '';
@@ -23,6 +29,11 @@ function randString($length, $charset='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmno
     return $str;
 }
 
+/**
+ * Gets list of sites from db
+ * @global $dbc databse connection
+ * @return string sites
+ */
 function getSites() 
 {
 	global $dbc;
@@ -44,6 +55,11 @@ function getSites()
 	return $ret;
 }
 
+/**
+ * Checks the form and returns errors
+ * @global $dbc databse connection
+ * @return string errors
+ */
 function getFormErrors() {
 	$errors = "";
 	global $dbc;

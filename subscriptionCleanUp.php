@@ -20,6 +20,9 @@ if ($todays_date === "Sun") {
 	deleteCourses();
 }
 
+/**
+ * Deletes old emails (> 3 days) from db
+ */
 function deleteEmails()
 {
 	$dbc = $GLOBALS['dbc'];
@@ -29,6 +32,9 @@ function deleteEmails()
 	echo "deleted emails: " . $dbc->affected_rows . "\n";
 }
 
+/**
+ * Deletes old courses (> 7 days) from db
+ */
 function deleteCourses()
 {
 	$dbc = $GLOBALS['dbc'];

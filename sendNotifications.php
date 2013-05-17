@@ -33,6 +33,12 @@ if ($todays_date === "Sun") {
 	}
 }
 
+/**
+ * Creates new courses links
+ * @param char $freq requested frequency ('w' or 'd')
+ * @param array $sites sites to get notifications abour
+ * @return array new courses links 
+ */
 function getLinks($freq, $sites)
 {
 	$dbc = $GLOBALS['dbc'];
@@ -63,6 +69,13 @@ function getLinks($freq, $sites)
 	return $courses_links;
 }
 
+/**
+ * 
+ * @param char $freq requested frequency ('w' or 'd')
+ * @param string $subject email subject
+ * @param string $headers email headers
+ * @param array $courses_links new courses links
+ */
 function notify($freq, $subject, $headers, $courses_links) 
 {
 	$dbc = $GLOBALS['dbc'];
@@ -95,6 +108,11 @@ function notify($freq, $subject, $headers, $courses_links)
 	}
 }
 
+/**
+ * Gets list of sites from db
+ * @global $dbc databse connection
+ * @return array sites
+ */
 function getSites() 
 {
 	$dbc = $GLOBALS['dbc'];
