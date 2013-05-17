@@ -1,4 +1,15 @@
 <?php
+
+/**
+ * index.php is the main page of the site, which allows user to search for courses,
+ * see trending course, see trending classes, and subscribe to notifications 
+ *
+ *@Author Christopher Rehfeld
+ *@Author Tatiana Braginets
+ *@Author Manzoor Ahmed
+ *@Author Andrey Andreev
+ */
+
 header('content-type: text/html;charset=utf-8');
 require_once 'connection.php';
 require_once 'Pager/Pager.php';
@@ -11,7 +22,6 @@ $searchResults = array();
 $search = isset($_GET['search']) && is_string($_GET['search'])
         ? (get_magic_quotes_gpc() ? stripslashes($_GET['search']) : $_GET['search'])
         : '';
-
 
 // split the string into words based on word boundaries(transitions between word charaters and punctuation/whitespace)
 $words = array();
@@ -41,16 +51,14 @@ if ($words) {
     $pagerLinks = $pager->links;
 }
 
-
 $trendingCourses = getTrendingCourses($dbc, 4);
 $trendingKeywords = getTrendingKeywords($dbc, 4);
-
-
-
 ?>
+
+
 <!doctype html>
 <head>
-<title>Kazoom - Search</title>
+<title>Kazoom - Search for courses</title>
 <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
 <link rel="stylesheet" href="css/style.css" type="text/css">
 <link rel="stylesheet" href="css/jquery-ui-1.10.3.custom.min.css" type="text/css">
@@ -302,8 +310,6 @@ $trendingKeywords = getTrendingKeywords($dbc, 4);
                 <div style="clear: both;"></div>
             </div>
             
-
-
             <div class="pagerLinks">
                 <?php echo $pagerLinks; ?>
                 <hr class="gradientHr">
@@ -325,8 +331,6 @@ $(function(){
     .click(function(){
         document.location = $(".course-detail-link", this).attr("href");
     });
-    
-    
     
     //from http://jqueryui.com/autocomplete/#multiple
     $.getJSON('autoSuggestWords.php', function(availableTags) {
@@ -377,7 +381,6 @@ $(function(){
             }
           });
     });
-
 });
 </script>
 </body>
