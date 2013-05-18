@@ -28,9 +28,14 @@
 			#'course' is subpath for coursera , and 'courses' is subpath for edx
 			$coursepath = explode('/',$hostpath);
 			
-			#this is a coursera or edx url, ie www.coursera.org/course/.. or www.edx.org/courses/... 
-			if( ((strcasecmp($hostInfo["host"],"www.coursera.org")==0) && (strcasecmp($coursepath[1],"course")==0))
-			||  ((strcasecmp($hostInfo["host"],"www.edx.org")==0) && (strcasecmp($coursepath[1],"courses")==0))){
+			#this is one of the known url, ie www.coursera.org/course/.. or www.edx.org/courses/... 
+			if(
+			    ((strcasecmp($hostInfo["host"],"www.coursera.org")==0) && (strcasecmp($coursepath[1],"course" )==0))
+			||  ((strcasecmp($hostInfo["host"],"www.edx.org"     )==0) && (strcasecmp($coursepath[1],"courses")==0))
+			||  ((strcasecmp($hostInfo["host"],"www.canvas.net"  )==0) && (strcasecmp($coursepath[1],"courses")==0))
+			||  ((strcasecmp($hostInfo["host"],"www.udacity.com" )==0) && (strcasecmp($coursepath[1],"course" )==0))
+			||  ((strcasecmp($hostInfo["host"],"ocw.mit.edu"     )==0) && (strcasecmp($coursepath[1],"courses")==0))
+			){
 				
 			  /**
 			   * redirect to the url while incrementing hits for this url
@@ -73,10 +78,10 @@
 		  
 	}//if hostname
 	else{
-		echo "Not valid Coursera or Edx URL";
+	//don't need to update database, wrong url was passed, or someone changed the url
 	}
  }//hostinfo 
  else{
- 	echo "Unknown URL ";
+ 	#echo "Unknown URL ";
  }	
 ?>
