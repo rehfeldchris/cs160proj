@@ -28,7 +28,7 @@
 			#'course' is subpath for coursera , and 'courses' is subpath for edx
 			$coursepath = explode('/',$hostpath);
 			
-			#this is a coursera or edx url, ie www.coursera.org/course/.. or www.edx.org/courses/... 
+			#this is one of the known url, ie www.coursera.org/course/.. or www.edx.org/courses/... 
 			if(
 			    ((strcasecmp($hostInfo["host"],"www.coursera.org")==0) && (strcasecmp($coursepath[1],"course" )==0))
 			||  ((strcasecmp($hostInfo["host"],"www.edx.org"     )==0) && (strcasecmp($coursepath[1],"courses")==0))
