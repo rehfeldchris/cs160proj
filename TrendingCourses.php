@@ -20,8 +20,15 @@
 	if($hostInfo !== false){
 		//var_dump($hostInfo);
 		
-		#make sure host name is either Coursera or Edx
-		if((strcasecmp($hostInfo["host"],"www.coursera.org") == 0) || ((strcasecmp($hostInfo["host"],"www.edx.org") ==0))){
+		#make sure host name is known 
+		if(
+		      ((strcasecmp($hostInfo["host"],"www.coursera.org") == 0)) 
+		   || ((strcasecmp($hostInfo["host"],"www.edx.org") ==0))
+		   || ((strcasecmp($hostInfo["host"],"www.canvas.net") == 0)) 
+		   || ((strcasecmp($hostInfo["host"],"www.udacity.com") ==0))
+		   || ((strcasecmp($hostInfo["host"],"ocw.mit.edu") == 0))
+		   || ((strcasecmp($hostInfo["host"],"see.stanford.edu") == 0))
+		   ){
             
 			#check for '/course/'
 			$hostpath = $hostInfo['path'];
@@ -30,11 +37,12 @@
 			
 			#this is one of the known url, ie www.coursera.org/course/.. or www.edx.org/courses/... 
 			if(
-			    ((strcasecmp($hostInfo["host"],"www.coursera.org")==0) && (strcasecmp($coursepath[1],"course" )==0))
+				((strcasecmp($hostInfo["host"],"www.coursera.org")==0) && (strcasecmp($coursepath[1],"course" )==0))
 			||  ((strcasecmp($hostInfo["host"],"www.edx.org"     )==0) && (strcasecmp($coursepath[1],"courses")==0))
 			||  ((strcasecmp($hostInfo["host"],"www.canvas.net"  )==0) && (strcasecmp($coursepath[1],"courses")==0))
 			||  ((strcasecmp($hostInfo["host"],"www.udacity.com" )==0) && (strcasecmp($coursepath[1],"course" )==0))
 			||  ((strcasecmp($hostInfo["host"],"ocw.mit.edu"     )==0) && (strcasecmp($coursepath[1],"courses")==0))
+			||  ((strcasecmp($hostInfo["host"],"see.stanford.edu")==0) && (strcasecmp($coursepath[1],"see")==0))
 			){
 				
 			  /**
@@ -78,7 +86,7 @@
 		  
 	}//if hostname
 	else{
-	//don't need to update database, wrong url was passed, or someone changed the url
+		//don't need to update database, wrong url was passed, or someone changed the url
 	}
  }//hostinfo 
  else{
