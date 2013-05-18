@@ -121,6 +121,7 @@ if(isset($_POST['submit']))
 			$keywords->showKeywords($dbc=$GLOBALS['dbc']);			
 		?>
 		</div></td>
+		
 		<td width="28%"><div id ="search-keywords">
 		<?php 
 		$trend = new ShowTrendingCourses(); 
