@@ -44,7 +44,7 @@ function getTrendingCourses($dbc, $howMany) {
       join course_data
      using (id)
      order
-        by hits asc
+        by hits desc
      limit %d";
     $sql = sprintf($format, $howMany);
     $result = $dbc->query($sql);
