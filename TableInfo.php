@@ -6,16 +6,20 @@
  **/
 require_once "connection.php";
 
-	function printTable()
+	function printTable($word)
 	{
 		$db=$GLOBALS['dbc'];
-		$que="Select distinct * from course_data natural join coursedetails";
+		$db->real_escape_string($word);
+		$que="Select distinct * from course_data natural join coursedetails
+			WHERE  title LIKE '%$word%' OR short_desc LIKE '%$word%' 
+			GROUP BY title LIMIT 10";
 		$result=$db->query($que) or die(mysqli_error($db));
 		$finfo = $result->fetch_fields();
 		
 		echo "<div>";
 		echo "<table border=1 width=\"100%\"  style=\"background-color:00FF66\">";
 		echo "<tr>";
+		$success = false;
 		while($row = mysqli_fetch_array($result))
 		{
 			$courseImage=$row['course_image'];
@@ -42,10 +46,12 @@ require_once "connection.php";
 			<td width=\"5%\"><img src=\"$teacherImage\" width=\"100px\" height=\"100px\"></td>
 			<td width=\"5%\">$site</td>
 			</tr>";
+			$success = true;
 		}		
 		echo "</tr>";
 		echo "</table>";
+		return $success;
 	}
-		printTable();
+	
 ?>
 

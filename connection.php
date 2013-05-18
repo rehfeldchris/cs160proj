@@ -7,7 +7,7 @@
  
  
  
-$flagLocalDB = true;
+$flagLocalDB = false;
  
 $string = file_get_contents("dbconfiguration.json");
 $json_s = json_decode($string,true);

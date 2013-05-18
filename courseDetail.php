@@ -119,6 +119,7 @@ $stmt->free_result();
 ?><!DOCTYPE html>
 <head>
     <title><?php echo escape($title); ?></title>
+	<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="css/comments.css" type="text/css">
 <style>
     body {font-family: verdana, arial, sans-serif; background-image: url(images/white_sand.png); background-repeat: repeat;}
@@ -142,7 +143,7 @@ $stmt->free_result();
     }
     
     #courseData h1 {
-        font-size: 48pt;
+        font-size: 30pt;
         text-align: center;
     }
     
@@ -156,8 +157,7 @@ $stmt->free_result();
         text-align: left;
     }
     
-    
-    
+	
     #courseData {
         margin: 1em;
         padding: 1em;
@@ -176,7 +176,7 @@ $stmt->free_result();
     
     #media img {
         margin: 2em;
-        max-width: 100%;
+        max-width: 300px;
         
     }
     
@@ -189,10 +189,31 @@ $stmt->free_result();
         -khtml-border-radius: 5px;
         -webkit-border-radius: 5px;
     }
+	.professor-image {
+		height:200px;
+		overflow: hidden;
+		width:200px;
+		-webkit-box-shadow:0 0 20px rgba(0,0,0,0.8);
+			-moz-box-shadow:0 0 20px rgba(0,0,0,0.8);
+			box-shadow:0 0 20px rgba(0,0,0,0.8);
+			border-radius: 5px;
+			-moz-border-radius: 5px;
+			-khtml-border-radius: 5px;
+			-webkit-border-radius: 5px;
+}
+
+	.professor-image img{
+		display:block;
+		min-height:100%;
+		max-width:100%;
+		margin-left:auto;
+		margin-right:auto;
+	}
     
 </style>
 </head>
 <body>
+	<div class="container-fluid">
     <div id="courseData">
         <h1><?php echo escape($title); ?></h1>
 
@@ -247,7 +268,9 @@ $stmt->free_result();
             <?php foreach ($professors as $entry) { ?>
                 <li><p><?php
                     if ($entry['profimage']) {
-                        printf('<img class="blingBlingImage" src="%s"><br>', $entry['profimage']);
+						?><div class="professor-image"><?php
+                        printf('<img  src="%s"><br>', $entry['profimage']);
+						?></div><?php
                     }
                     echo escape($entry['profname']); 
                     ?>
@@ -290,7 +313,7 @@ $stmt->free_result();
         </div>
         <div id="paginationControl"><button>Show more comments</button></div>
     </div>
-    
+    </div>
     
     
     

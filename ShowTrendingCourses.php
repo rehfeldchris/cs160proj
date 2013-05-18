@@ -14,12 +14,14 @@
 					background: none repeat scroll 0 0  ;
 					border: 3px solid #73C0E6;
 					border-radius: 10px 10px 10px 30px;
-					border-bottom-color:#000000;
+					border-color:grey;
 					list-style: none outside none;
-					font-size:14px;
+					font-size:16px;
+					font-weight:bold;
+					font-family:Verdana, Arial, Helvetica, sans-serif;
 					min-height: 30px;
 					overflow: hidden;
-					padding: 10px 10px 10px 15px;
+					padding: 5px 10px 15px 15px;
 					position: relative;
 					width: 97%;
 					z-index: 3;
@@ -27,25 +29,22 @@
 			.trend{
 					background: none repeat scroll 0 0 #CCCCCC;
 					border: 3px solid #73C0E6;
-					border-radius: 10px 10px 10px 30px;
-					border-bottom-color:#000000;
+					border-radius: 10px 10px 10px 10px;
+					border-color:grey;
 					list-style: none outside none;
-					font-size:16px;
+					font-size:18px;
+					font-family:Verdana, Arial, Helvetica, sans-serif;
 					font-weight:bold;
-					min-height: 30px;
+					min-height: 20px;
 					overflow: hidden;
-					padding: 10px 10px 10px 15px;
+					padding: 5px 10px 15px 15px;
 					position: relative;
 					width: 97%;
 					z-index: 3;
 					}
 					
-			a{
-					color:#000000;
-					font-family:Verdana, Arial, Helvetica, sans-serif;
-					font-size:18px;
-					font-weight:bold;
-					}
+			
+
 		</style>
 	
 	</head>
@@ -82,7 +81,7 @@ class ShowTrendingCourses{
 	function showTrendingCourses($dbc){
 	
 	//show only five records from trending courses with higher hits
-	$query = "SELECT `id` from `trendingcourses` WHERE `hits` >= 5 ORDER BY `hits` ASC LIMIT 5;";
+	$query = "SELECT `id` from `trendingcourses` WHERE `hits` >= 5 ORDER BY `hits` ASC LIMIT 3;";
 	//run query
 	$maxHits = $dbc->query($query) or die($dbc->error);
 		
@@ -92,7 +91,7 @@ class ShowTrendingCourses{
 			//print trending course, with image
 					echo "<div class ='trend'>";
 						echo"<ul style='list-style-type:none;display:inline;'>
-								<li><a href='#'>Trending Courses</a></li>
+								<li>Trending Courses</li>
 							</ul>";
 					echo "</div>";
 					
@@ -101,44 +100,17 @@ class ShowTrendingCourses{
 				//need id first to find course information
 				$id = $row['id'];
 				
-				//print trending course, with image
-				echo "<div class ='course'>";
-				echo"<ul style='list-style-type:none;display:inline;'>
-						<li><a href='$link'>$course_title</a>
-							<div class='image'><img src ='$image[0]' width ='80', height='70'/></div>
-						</li>
-					</ul>";
-				echo "</div>";
 				//need to find the title with given $id
-				$title_query = $dbc->real_escape_string("SELECT `title` from `course_data` WHERE `id` = $id;");
-				$results = $dbc->query($title_query) or die($dbc->error);
+				$course_query = $dbc->real_escape_string("SELECT title, course_link from `course_data` WHERE `id` = $id;");
+				$results = $dbc->query($course_query) or die($dbc->error);
+				//echo $course_query;
 				
-				if($results){
+				if($results && $results->num_rows){
 					//get the entire row
-					$title = $results->fetch_row();
+					$row = $results->fetch_array();
 					//get the title, and covert it to link so user can click on it
-					$course_title = $title[0];
-			
-					//need to get course link to course
-					$link_query = $dbc->real_escape_string("SELECT `course_link` from `course_data` WHERE `id` = $id;");
-					$link_query_run = $dbc->query($link_query) or die($dbc->error);
-					$link;
-					//if no empty $link
-					if($link_query_run){
-						$col = $link_query_run->fetch_row();
-						//get the link 
-						$link = $col[0];
-					}//if 
-					
-					else{
-						//if course with no link
-						$link ="#";
-					}//else
-					
-					#just incase we need to show images
-					$image_query = $dbc->real_escape_string("SELECT `course_image` from `course_data` WHERE `id` = $id;");
-					$image_run = $dbc->query($image_query) or die($dbc->error);
-					$image = $image_run->fetch_row();
+					$course_title = $row['title'];
+					$link = $row['course_link'];
 					
 					//print trending course, with image
 					echo "<div class ='course'>";

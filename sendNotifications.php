@@ -33,6 +33,12 @@ if ($todays_date === "Sun") {
 	}
 }
 
+/**
+ * Creates new courses links
+ * @param char $freq requested frequency ('w' or 'd')
+ * @param array $sites sites to get notifications abour
+ * @return array new courses links 
+ */
 function getLinks($freq, $sites)
 {
 	$dbc = $GLOBALS['dbc'];
@@ -55,7 +61,7 @@ function getLinks($freq, $sites)
 			$courses_links[$site] = "";
 			while($row = $result->fetch_array()) {
 				$courses_links[$site] .= $row['title'] . "\r\n";
-				$courses_links[$site] .= "http://www.sjsu-cs.org/cs160/spring2013/sec1group1/cs160proj/courseDetail.php?courseId=" 
+				$courses_links[$site] .= "http://www.sjsu-cs.org/cs160/spring2013/sec1group1/courseDetail.php?courseId=" 
 										. $row['course_data_id'] . "\r\n\n";
 			}
 		}
@@ -63,6 +69,13 @@ function getLinks($freq, $sites)
 	return $courses_links;
 }
 
+/**
+ * 
+ * @param char $freq requested frequency ('w' or 'd')
+ * @param string $subject email subject
+ * @param string $headers email headers
+ * @param array $courses_links new courses links
+ */
 function notify($freq, $subject, $headers, $courses_links) 
 {
 	$dbc = $GLOBALS['dbc'];
@@ -84,7 +97,7 @@ function notify($freq, $subject, $headers, $courses_links)
 			}
 			if ($message != "") {
 				$message .= "To unsubscribe, click link below: \r\n";
-				$message .= 'http://www.sjsu-cs.org/cs160/spring2013/sec1group1/cs160proj/unsubscribe.php?email=' 
+				$message .= 'http://www.sjsu-cs.org/cs160/spring2013/sec1group1/unsubscribe.php?email=' 
 							. $email . '&key=' . $key;
 
 				mail($email, $subject, $message, $headers);
@@ -95,6 +108,11 @@ function notify($freq, $subject, $headers, $courses_links)
 	}
 }
 
+/**
+ * Gets list of sites from db
+ * @global $dbc databse connection
+ * @return array sites
+ */
 function getSites() 
 {
 	$dbc = $GLOBALS['dbc'];
