@@ -18,7 +18,6 @@ rect {
   stroke: #eee;
   fill: #aaa;
   fill-opacity: .8;
-  text-align: center;
 }
 
 rect.child {
@@ -84,12 +83,20 @@ text {
             .attr("class", function(d) { return d.children ? "parent" : "child"; });
     
 	
-		g.append("svg:text")
+		g.append("text")
 			.attr("transform", transform)
 			.attr("dy", ".35em")
 			.style("opacity", function(d) { return d.dx * ky > 12 ? 1 : 0; })
 			.style("font-size", function(d) { return d.parent ? "11px" : "36px"; })
-			.text(function(d) { return d.name; });
+			.text(function(d) { if (d.name.length > 40 && root.dy * kx  < 350) {
+									return d.name.match(/.{1,40}/g)[0] + " [..]";
+								}
+								else if (d.name.length > 60 && root.dy * kx  < 400) {
+									return d.name.match(/.{1,60}/g)[0] + " [..]";
+								} 
+								else {
+									return d.name;
+								}});
 
 
 		d3.select(window)
@@ -120,7 +127,16 @@ text {
 
 		t.select("text")
         .attr("transform", transform)
-        .style("opacity", function(d) { return d.dx * ky > 12 ? 1 : 0; });
+        .style("opacity", function(d) { return d.dx * ky > 12 ? 1 : 0; })
+		.text(function(d) { if (d.name.length > 40 && root.dy * kx  < 350) {
+								return d.name.match(/.{1,40}/g)[0] + " [..]";
+							}
+							else if (d.name.length > 60 && root.dy * kx  < 400) {
+								return d.name.match(/.{1,60}/g)[0] + " [..]";
+							} 
+							else {
+								return d.name;
+							}});
 
 		d3.event.stopPropagation();
 
@@ -131,8 +147,8 @@ text {
 			return "translate(8," + d.dx * ky / 2 + ")";
 		}
 	}
-	
 
+	
 
 
 
