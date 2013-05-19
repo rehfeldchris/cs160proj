@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
     <link type="text/css" rel="stylesheet" href="style.css"/>
     <script type="text/javascript" src="d3/d3.v3.min.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -10,7 +10,7 @@
 .chart {
   display: block;
   margin: auto;
-  margin-top: 60px;
+  margin-top: 100px;
   font-size: 11px;
 }
 
@@ -33,11 +33,13 @@ text {
   </head>
   <body>
     <div id="body">
-		<div id="letters"></div>
-	
+		<div id="header">
+			Course name starts with..
+			<div id="letters"></div>
+		</div>
 	
       <div id="footer">
-        d3.layout.partition
+        MOOCs
         <div class="hint">click or option-click to descend or ascend</div>
       </div>
     </div>
@@ -55,6 +57,7 @@ text {
 		.style("width", w + "px")
 		.style("height", h + "px")
 		.append("svg:svg")
+		.attr("xmlns","http://www.w3.org/2000/svg")
 		.attr("width", w)
 		.attr("height", h);
 
@@ -72,24 +75,21 @@ text {
 		ky = h / 1;
 
 		g.append("svg:rect")
-		.attr("width", root.dy * kx)
-		.attr("height", function(d) { return d.dx * ky; })
-		.attr("class", function(d) { return d.children ? "parent" : "child"; });
-
-		var svg = g.append("svg:text")
-			.attr("transform", transform)
-			.attr("dy", ".35em")
-			.style("opacity", function(d) { return d.dx * ky > 12 ? 1 : 0; })
-			.style("text-decoration", "underline")
-			.style("color", "blue")
-			.style("font-size", function(d) { return d.dx * ky / 10 + "px"; })
-			.text(function(d) { return d.name; })
-		.append("foreignObject")
-		.attr("width", 80)
-		.attr("height", 80)
-		.append("xhtml:body")
-		.style("font", "14px 'Helvetica Neue'")
-		.html("<h1>text</h1>");
+            .attr("width", root.dy * kx)
+            .attr("height", function(d) { return d.dx * ky; })
+            .attr("class", function(d) { return d.children ? "parent" : "child"; });
+    
+	
+		g.append("svg:foreignObject")
+        .attr("width", root.dy * kx)
+        .attr("height", function(d) { return d.dx * ky; })
+			.append("xhtml:body")
+			.style("text-align", "center")
+				.append("div")
+				.append("p").text(function(d) { return d.name; })            
+					//.attr("transform", transform)
+					.style("opacity", function(d) { return d.dx * ky > 12 ? 1 : 0; })
+					.style("font-size", function(d) { return d.dx * ky / 5 > 50 ? "50px" : (d.dx * ky / 5 + "px"); }); 
 
 
 		d3.select(window)
@@ -97,12 +97,12 @@ text {
 
 		function click(d) {
 
-		if (!d.children) { 
-		if ((d.y + d.dy) === h) {
-			window.open("http://www.google.com", "_blank"); 
-			d3.event.stopPropagation();
-			return;  
-		}
+		if (!d.children ) { 
+			if (d.parent) {
+				d3.event.stopPropagation();
+				window.open(d.course_link, "_blank");
+				return; 
+			}
 		};
 
 		kx = (d.y ? w - 40 : w) / (1 - d.y);
@@ -118,10 +118,14 @@ text {
 		.attr("width", d.dy * kx)
 		.attr("height", function(d) { return d.dx * ky; });
 
-		t.select("text")
-		.attr("transform", transform)
+		t.select("foreignObject")
+		.attr("width", d.dy * kx)
+		.attr("height", function(d) { return d.dx * ky; });
+
+		t.select("p")
+		//.attr("transform", transform)
 		.style("opacity", function(d) { return d.dx * ky > 12 ? 1 : 0; })
-		.style("font-size", function(d) { return d.dx * ky / 10 + "px"; });
+		.style("font-size", function(d) { return d.dx * ky / 5 > 50 ? "50px" : (d.dx * ky / 5 + "px"); });
 
 		d3.event.stopPropagation();
 
@@ -129,22 +133,22 @@ text {
 		}
 
 		function transform(d) {
-		return "translate(8," + d.dx * ky / 2 + ")";
+			return "translate(8," + d.dx * ky / 2 + ")";
 		}
 	}
 	
-	
-	
-	
 
-	
-	
+
+
+
+
+
 	$(function(){
 		var file = "../courseList.php";
 		$.getJSON(file, function(data){
 			var s = "abcdefghijklmnopqrstuvwxyz";
 			$.each(s.split(""), function(_, letter){
-				$letter = $("<button>" +letter +"</button>");
+				$letter = $('<button class="button blue">' +letter +"</button>");
 				$.data($letter[0], "letter", letter);
 				$letter.click(function(){
 					var letter = $.data(this, "letter");
