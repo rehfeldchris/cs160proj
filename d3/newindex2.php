@@ -21,8 +21,11 @@ rect {
   text-align: center;
 }
 
+rect.child {
+	cursor: pointer;
+}
+
 rect.parent {
-  cursor: pointer;
   fill: steelblue;
 }
 
@@ -136,7 +139,7 @@ text {
 
 
 	$(function(){
-		var file = "../courseList.php";
+		var file = "../courseList_v2.php";
 		$.getJSON(file, function(data){
 			var s = "abcdefghijklmnopqrstuvwxyz";
 			$.each(s.split(""), function(_, letter){
