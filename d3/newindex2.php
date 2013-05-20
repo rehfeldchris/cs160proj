@@ -88,15 +88,9 @@ text {
 			.attr("dy", ".35em")
 			.style("opacity", function(d) { return d.dx * ky > 12 ? 1 : 0; })
 			.style("font-size", function(d) { return d.parent ? "11px" : "36px"; })
-			.text(function(d) { if (d.name.length > 40 && root.dy * kx  < 350) {
-									return d.name.match(/.{1,40}/g)[0] + " [..]";
-								}
-								else if (d.name.length > 60 && root.dy * kx  < 400) {
-									return d.name.match(/.{1,60}/g)[0] + " [..]";
-								} 
-								else {
-									return d.name;
-								}});
+			.text(function(d) { var t = new RegExp('.{1,' + Math.floor(root.dy * kx / 6.5) + '}', "g");
+							return (root.dy * kx / d.name.length > 5.5) ? 
+							d.name : d.name.match(t)[0] + " [..]";});
 
 
 		d3.select(window)
@@ -128,15 +122,9 @@ text {
 		t.select("text")
         .attr("transform", transform)
         .style("opacity", function(d) { return d.dx * ky > 12 ? 1 : 0; })
-		.text(function(d) { if (d.name.length > 40 && root.dy * kx  < 350) {
-								return d.name.match(/.{1,40}/g)[0] + " [..]";
-							}
-							else if (d.name.length > 60 && root.dy * kx  < 400) {
-								return d.name.match(/.{1,60}/g)[0] + " [..]";
-							} 
-							else {
-								return d.name;
-							}});
+		.text(function(d) { var t = new RegExp('.{1,' + Math.floor(d.dy * kx / 6.5) + '}', "g");
+							return (d.dy * kx / d.name.length > 5.5) ? 
+							d.name : d.name.match(t)[0] + " [..]";});
 
 		d3.event.stopPropagation();
 
