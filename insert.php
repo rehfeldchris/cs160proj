@@ -4,8 +4,9 @@
  *insert.php cleans alltables in the database, craws all URLs of Edx and Coursera,
  *and adds all returned data into the course_data and coursedetails tables.
  *
- *@author Manzoor Ahmed
- *@author Chris Rehfeld
+ * @author Manzoor Ahmed
+ * @author Chris Rehfeld
+ * @author Tatiana Braginets
  */
 header('content-type: text/plain;charset=utf-8');
 
@@ -155,6 +156,14 @@ function insertCourseDetails($url, $extraInfo = array(),$website="Coursera"){
 		} // end else
 }//end function
 
+/**
+ * Removes courses URLs from db that are not in 
+ * the passed array
+ * 
+ * @param array $newUrls new URLs
+ * @param string $website which website URLs belong to
+ * @return void
+ */
 function removeOldCourses($newUrls, $website)
 {
 	$dbc = $GLOBALS['dbc'];
