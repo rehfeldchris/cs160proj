@@ -1,16 +1,3 @@
-<?php
-
-/**
- * Displays data using Zoomable Partition 
- * Original version:
- * http://mbostock.github.io/d3/talk/20111018/partition.html
- * 
- * @author Chris Rehfeld
- * @author Tatiana Bragints
- */
-
-?>
-
 <!DOCTYPE html>
 <html>
   <head>
@@ -33,11 +20,8 @@ rect {
   fill-opacity: .8;
 }
 
-rect.child {
-	cursor: pointer;
-}
-
 rect.parent {
+  cursor: pointer;
   fill: steelblue;
 }
 
@@ -61,10 +45,7 @@ text {
     </div>
 	<script type="text/javascript">
 
-	/**
-	 * Recursively processes JSON data and generates page
-	 * @param JSON root
-	 */
+	
 	function initD3(root) {
 		var w = 1120,
 		h = 600,
@@ -99,14 +80,16 @@ text {
             .attr("class", function(d) { return d.children ? "parent" : "child"; });
     
 	
-		g.append("text")
-			.attr("transform", transform)
-			.attr("dy", ".35em")
-			.style("opacity", function(d) { return d.dx * ky > 12 ? 1 : 0; })
-			.style("font-size", function(d) { return d.parent ? "11px" : "36px"; })
-			.text(function(d) { var t = new RegExp('.{1,' + Math.floor(root.dy * kx / 6.5) + '}', "g");
-							return (root.dy * kx / d.name.length > 5.5) ? 
-							d.name : d.name.match(t)[0] + " [..]";});
+		g.append("svg:foreignObject")
+        .attr("width", root.dy * kx)
+        .attr("height", function(d) { return d.dx * ky; })
+			.append("xhtml:body")
+			.style("text-align", "center")
+				.append("div")
+				.append("p").text(function(d) { return d.name; })            
+					//.attr("transform", transform)
+					.style("opacity", function(d) { return d.dx * ky > 12 ? 1 : 0; })
+					.style("font-size", function(d) { return d.dx * ky / 5 > 50 ? "50px" : (d.dx * ky / 5 + "px"); }); 
 
 
 		d3.select(window)
@@ -135,12 +118,14 @@ text {
 		.attr("width", d.dy * kx)
 		.attr("height", function(d) { return d.dx * ky; });
 
-		t.select("text")
-        .attr("transform", transform)
-        .style("opacity", function(d) { return d.dx * ky > 12 ? 1 : 0; })
-		.text(function(d) { var t = new RegExp('.{1,' + Math.floor(d.dy * kx / 6.5) + '}', "g");
-							return (d.dy * kx / d.name.length > 5.5) ? 
-							d.name : d.name.match(t)[0] + " [..]";});
+		t.select("foreignObject")
+		.attr("width", d.dy * kx)
+		.attr("height", function(d) { return d.dx * ky; });
+
+		t.select("p")
+		//.attr("transform", transform)
+		.style("opacity", function(d) { return d.dx * ky > 12 ? 1 : 0; })
+		.style("font-size", function(d) { return d.dx * ky / 5 > 50 ? "50px" : (d.dx * ky / 5 + "px"); });
 
 		d3.event.stopPropagation();
 
@@ -151,12 +136,13 @@ text {
 			return "translate(8," + d.dx * ky / 2 + ")";
 		}
 	}
+	
 
-	/**
-	 * Based on the letter selected by user,
-	 * selects relevant part of JSON data
-	 * (courses that starts with this letter)
-	 */
+
+
+
+
+
 	$(function(){
 		var file = "../courseList.php";
 		$.getJSON(file, function(data){

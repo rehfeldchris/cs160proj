@@ -1,11 +1,7 @@
 <?php
 
 /**
- * Generates JSON file from MOOCs database
- * to be used later for processing by D3 library functions 
- * 
  * @author Chris Rehfeld
- * @author Tatiana Bragints
  */
 
 header('content-type: application/json;charset=utf-8');
@@ -15,7 +11,7 @@ require_once 'connection.php';
 
 
 $sql = "
-select site, title, course_link from course_data 
+select site, category, title, course_link from course_data 
 ";
 
 $result = $dbc->query($sql);
@@ -28,25 +24,17 @@ $groups = array();
 foreach ($rows as $row) {
 	extract($row);
 	$letter = mb_strtolower(mb_substr($title, 0, 1, 'utf-8'), 'utf-8');
-	if ($site === "MIT") {
-		$groups[$letter]["MIT"]["..."][] = $row;
-	} else {
-		$groups[$letter]["Coursera, Canvas, Edx, Stanford, Udacity"][$site][] = $row;
-	}
-    
+    $groups[$letter][$site][$category][] = $row;
 }
 
-/**
- * Converts array to JSON structure
- * @param array $arr
- * @return string
- */
+
+
 
 function toD3Structure($arr) {
     //check if it has numeric keys
     //non-numeric means titles and names etc...
     //assume first key represents all the keys types
-    if (is_numeric(key($arr)) && array_key_exists("title", $arr[0])) {
+    if (is_numeric(key($arr))) {
         $ret = array();
         foreach ($arr as $subArr) {
             //$ret[] = array('name' => $subArr['title']);
@@ -57,15 +45,7 @@ function toD3Structure($arr) {
     
     $ret = array();
     foreach ($arr as $key => $subArr) {
-		if (is_numeric($key)) {
-			$key = "...";
-		}
-		if (count($subArr) > 15) {
-			$ret[] = array('name' => $key, 'children' => toD3Structure(array_chunk($subArr, 15)));
-		} else {
-			$ret[] = array('name' => $key, 'children' => toD3Structure($subArr));
-		}
-        
+        $ret[] = array('name' => $key, 'children' => toD3Structure($subArr));
     }
     return $ret;
 }
@@ -73,3 +53,4 @@ function toD3Structure($arr) {
 $dataGroupedByLetters = array_map('toD3Structure', $groups);
 //print_r($dataGroupedByLetters);
 echo json_encode($dataGroupedByLetters);
+?>
