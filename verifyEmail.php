@@ -24,6 +24,7 @@ function randString($length, $charset='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmno
 <head>
 <title>Kazoom - Email subscription</title>
 <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+<link rel="stylesheet" href="css/style.css" type="text/css">
 <style type="text/css">
 body {
 	padding-top: 10px;
@@ -33,7 +34,6 @@ body {
         max-width: 500px;
         padding: 19px 29px 29px;
         margin: 0 auto 20px;
-        background-color: lightgrey;
         border: 1px solid #e5e5e5;
         -webkit-border-radius: 5px;
            -moz-border-radius: 5px;
@@ -41,6 +41,9 @@ body {
         -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
            -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
                 box-shadow: 0 1px 2px rgba(0,0,0,.05);
+                
+        background-color: #efefef;
+        box-shadow: 2px 3px 9px 2px rgba(0, 0, 0, 0.3);
 }
 
 </style>
@@ -52,10 +55,10 @@ body {
 		<h3 ><a class="muted" href="index.php">KaZoom</a></h3>
       </div>
 	  
-      <hr />
+      <hr class="gradientHr">
 	  <div class="subscribe-holder">
 		  <h4 class="subscribe-holder-heading">Subscribe to new courses notifications</h4>
-	<hr />
+	<hr class="gradientHr">
 
 <?php
 
@@ -89,7 +92,7 @@ if (isset($_REQUEST['email']) && isset($_REQUEST['key'])) {
 ?>
 	</div>
 	  <footer>
-	<hr />
+	<hr class="gradientHr">
 	<p>&copy; San Jose State University</p>
 	</footer>
 </div>
