@@ -26,7 +26,7 @@ foreach ($rows as $row) {
 	if ($site === "MIT") {
 		$groups[$letter]["MIT"]["..."][] = $row;
 	} else {
-		$groups[$letter]["Coursear, Canvas, Edx, Stanford, Udacity"][$site][] = $row;
+		$groups[$letter]["Coursera, Canvas, Edx, Stanford, Udacity"][$site][] = $row;
 	}
     
 }
