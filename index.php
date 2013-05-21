@@ -216,7 +216,8 @@ $trendingKeywords = getTrendingKeywords($dbc, 4);
 <body>
     <div id="container">
         <div class="row-fluid">
-            <a class="pull-right" id="subscribe-link" href="subscribe.php">Subscribe to notifications</a>
+            <div class="pull-right"><a  href="subscribe.php">Subscribe to notifications</a></div>
+			<div class="pull-right"><a  href="d3/index.php">D3 Visualization</a>&nbsp&nbsp&nbsp&nbsp</div>
             <h3><a class="muted" href="index.php">KaZoom</a></h3>
         </div>
 
@@ -317,33 +318,11 @@ $trendingKeywords = getTrendingKeywords($dbc, 4);
         </div>
         <?php } ?>
 
-<<<<<<< HEAD
-<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-<table width="100%">
-	<tr>
-	  <td width="33%"><input type="text" name="search" id="search" size="35" value="Search" /><input type="submit" name="submit" id="submit" value="KaZoom It" /></td>
-		<td width="39%"><div style="padding:0px 0px 10px 20px;">
-		<?php
-			$keywords = new OutputKeywords();
-			$keywords->showKeywords($dbc=$GLOBALS['dbc']);			
-		?>
-		</div></td>
-		
-		<td width="28%"><div id ="search-keywords">
-		<?php 
-		$trend = new ShowTrendingCourses(); 
-		$trend->showTrendingCourses($dbc =$GLOBALS['dbc']);
-		?>
-	  </div></td>
-	</tr>
-</table>
-</form>
-=======
         <footer>
             <p>&copy; San Jose State University</p>
         </footer>
     </div>
->>>>>>> bd31d41ac676aea8e779617520b4b9eb24d8f3a1
+
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="js/jquery-ui/js/jquery-ui-1.10.3.custom.min.js"></script>
