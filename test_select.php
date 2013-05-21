@@ -12,7 +12,7 @@ require_once "connection.php";
 			$class_ids = $val;
 		}
 		if($val != "none"){
-			setcookie("id", $class_ids, time()+3600);
+			setcookie("id", $class_ids, time()+3600, "/", "sjsu-cs.org");
 		}
 	}
 	if(isset($_POST['s'])){
