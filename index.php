@@ -216,7 +216,7 @@ $trendingKeywords = getTrendingKeywords($dbc, 4);
 <body>
     <div id="container">
         <div class="row-fluid">
-            <div class="pull-right"><a  href="subscribe.php">Subscribe to notifications</a></div>
+            <div class="pull-right"><a id="subscribe-link" href="subscribe.php">Subscribe to notifications</a></div>
 			<div class="pull-right"><a  href="d3/index.php">D3 Visualization</a>&nbsp&nbsp&nbsp&nbsp</div>
             <h3><a class="muted" href="index.php">KaZoom</a></h3>
         </div>
