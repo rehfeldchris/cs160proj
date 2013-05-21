@@ -198,6 +198,11 @@ function getAutoSuggestWords($dbc) {
     return $filteredWords;
 }
 
+/**
+ * Processes fetched results
+ * @param fetched results from db $stmt
+ * @return array or false if no results
+ */
 function fetch_array($stmt) {
     $fields = $out = array();
     foreach($stmt->result_metadata()->fetch_fields() as $field) {

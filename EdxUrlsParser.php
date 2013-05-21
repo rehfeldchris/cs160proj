@@ -45,7 +45,7 @@ class EdxUrlsParser extends AbstractUrlsParser
 	}
 	
 	/**
-	 * 
+	 * Get course short description
      * @return string short description for a course
      */
     public function getCourseShortDesc($url)

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Tests that urls parser works
+ * @author Tatiana Braginets
+ */
+
 require_once 'EdxUrlsParser.php';
 require_once 'CourseraUrlsParser.php';
 

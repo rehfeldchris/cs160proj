@@ -75,19 +75,11 @@ while ($stmt->fetch()) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * Removes special chars from a string
+ * @param string $str
+ * @return string string with special chars removed
+ */
 function escape($str) {
     return htmlspecialchars($str, ENT_NOQUOTES, 'UTF-8');
 }
@@ -325,7 +317,7 @@ $stmt->free_result();
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script>
     
-    
+
 function makeCommentEntry(msg) {
     $comment = $("<div class='box effect7'><div class='comment'></div></div>");
     $comment.find(".comment").text(msg);

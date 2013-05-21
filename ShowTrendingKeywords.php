@@ -1,5 +1,6 @@
 <?php 
 /**
+ * Script used for seraching and outputting keywords
  * @Author Manzoor Ahmed
  **/
 require_once 'connection.php';

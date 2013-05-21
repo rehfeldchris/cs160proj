@@ -1,4 +1,8 @@
 <?php
+/**
+ * Script to select and compare classes in a table format
+ * @author Jeremy Mua-Valaris
+ */
 require_once "connection.php";
 	
 	$class_ids = "";
@@ -26,7 +30,11 @@ require_once "connection.php";
 	//foreach ($_COOKIE as $key => $value){
 	//	echo("key: ".$key." - val: ".$value.'<br>');
 	//}
-
+	
+	/**
+	 * Selects course data based on course id and prints results
+	 * @param type $class_ids
+	 */
 	function printSelect($class_ids)
 	{
 		$db=$GLOBALS['dbc'];
@@ -88,6 +96,10 @@ require_once "connection.php";
 		//printf("%s", $rows[$id]['title']);
 	}
 	
+	/**
+	 * Prints course data in a row
+	 * @param array $row course data
+	 */
 	function printRow($row){
 		$courseImage=$row['course_image'];
 		$title=$row['title'];

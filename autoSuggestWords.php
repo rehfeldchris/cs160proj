@@ -1,5 +1,9 @@
 <?php
-
+/*
+ * This script used to get json file of suggested words for autocomplete
+ * 
+ * @author Chris Rehfeld
+ */
 ob_start("ob_gzhandler");
 header('content-type: application/json;charset=utf-8');
 header('cache-control: public;max-age=3600');
