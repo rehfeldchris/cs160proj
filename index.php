@@ -220,7 +220,8 @@ $trendingKeywords = getTrendingKeywords($dbc, 4);
 <body>
     <div id="container">
         <div class="row-fluid">
-            <a class="pull-right" id="subscribe-link" href="subscribe.php">Subscribe to notifications</a>
+            <div class="pull-right"><a id="subscribe-link" href="subscribe.php">Subscribe to notifications</a></div>
+			<div class="pull-right"><a  href="d3/index.php">D3 Visualization</a>&nbsp&nbsp&nbsp&nbsp</div>
             <h3><a class="muted" href="index.php">KaZoom</a></h3>
         </div>
 
@@ -325,6 +326,7 @@ $trendingKeywords = getTrendingKeywords($dbc, 4);
             <p>&copy; San Jose State University</p>
         </footer>
     </div>
+
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="js/jquery-ui/js/jquery-ui-1.10.3.custom.min.js"></script>

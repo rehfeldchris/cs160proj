@@ -66,18 +66,32 @@ class UrlFetcher
         return curl_exec($ch);
     }
     
-    
+    /**
+	 * Gets cached data, if exists
+	 * @param string $url
+	 * @return string cached data or false
+	 */
     protected static function getFromCache($url)
     {
         $file = self::filePath($url);
         return is_readable($file) ? file_get_contents($file) : false;
     }
     
+	/**
+	 * Gets file path for a given url
+	 * @param string $url
+	 * @return string path to file
+	 */
     protected static function filePath($url)
     {
         return self::CACHE_DIR . '/' . urlencode($url);
     }
     
+	/**
+	 * Caches data into file
+	 * @param string $url
+	 * @param string $data
+	 */
     protected static function putIntoCache($url, $data)
     {
         file_put_contents(self::filePath($url), $data);

@@ -246,6 +246,10 @@ if (isset($_REQUEST['subscribe']) && ($errors = getFormErrors()) === "") {
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script>
+/**
+ * Validates form
+ * @returns {Boolean} true if form is valid, false otherwise
+ */
 function validateForm()
 {
 		var success = true;

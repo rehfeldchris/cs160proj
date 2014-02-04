@@ -1,7 +1,12 @@
 <?php 
+<<<<<<< HEAD
 
 /***********************************************************************
  * ShowTrendingKeywords.php
+=======
+/**
+ * Script used for seraching and outputting keywords
+>>>>>>> c90a6c3feb477ad2334df22e1462ab875a4ce2ac
  * @Author Manzoor Ahmed
  **********************************************************************/
  
