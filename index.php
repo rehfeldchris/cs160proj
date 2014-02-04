@@ -15,6 +15,10 @@ require_once 'connection.php';
 require_once 'Pager/Pager.php';
 require_once 'helperFunctions.php';
 
+//show all errors
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 $search = '';
 $pagerLinks = '';
 $searchResults = array();

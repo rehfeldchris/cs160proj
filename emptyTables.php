@@ -2,15 +2,16 @@
 
 require_once 'connection.php';
 
-/*
- *this class is used to clean up all tables before crawling
+/**********************************************************
+ *Clean up all tables before crawling
  *emptyTables.php
+ *
  *@Author Manzoor Ahmed
- */
+ **********************************************************/
  
  /*
  *cleanTables 
- *this function clears all tables from `sjsucsor_160s1g1`
+ *this function clears all tables from table`sjsucsor_160s1g1`
  */
 function cleanTables(){
 
@@ -20,13 +21,10 @@ function cleanTables(){
     $drop3 = "delete from `trendingcourses`";
 
     $dbc=$GLOBALS['dbc'];
-    //clean coursedetails table
+    //run queries
     $dbc->query($drop1) or die ($dbc->error);
-    //clean course_data table
     $dbc->query($drop2) or die ($dbc->error);
-	//clean course_hits table
 	$dbc->query($drop3) or die($dbc->error);
-
 }
 
 ?>

@@ -1,10 +1,10 @@
 <?php
 
-/*
+/************************************************************************************
  *This class finds what the user types in the search bar, and  outputs the results
  *
  *@ Author Manzoor Ahmed
- **/
+ **********************************************************************************/
 
 class OutputSearch{
 
@@ -16,7 +16,15 @@ class OutputSearch{
 	function searchResults($word,$dbc){
 	
 		//look in `keywords` table first 
-		$course = "SELECT * FROM `keywords` WHERE `title` LIKE '$word%' OR `short_desc` LIKE '$word%' OR `link` LIKE '$word%';" or die($dbc->error);
+		$course = "SELECT * 
+				   FROM `keywords`
+				   WHERE `title`
+				   LIKE '$word%'
+				   OR `short_desc` 
+				   LIKE '$word%' 
+				   OR `link` 
+				   LIKE '$word%';"
+				   or die($dbc->error);
 		$run_course = $dbc->query($course) or die ($dbc->error);
 		
 		//found something
@@ -37,16 +45,22 @@ class OutputSearch{
 				//increment the count for this keyword			
 				$new_hit = $old_hit +1;
 					
-				$inc = "UPDATE `keywords` SET `hits` = '$new_hit' WHERE `id` = '$id'";
+				$inc = "UPDATE `keywords` 
+						SET `hits` = '$new_hit' 
+						WHERE `id` = '$id'";
 				$run = $dbc->query($inc) or die($dbc->error);	
 						
-				}//while
-			}//if
+				}
+			}
 			
-			//did not find it 
 			else if(mysqli_num_rows($run_course) == 0) {
 						//search in course_data table
-						$in_course = "SELECT * from `course_data` WHERE  `title` LIKE '$word%' OR `course_link` LIKE '$word%' OR `short_desc` LIKE '$word%';" or die($dbc->error);
+						$in_course = "SELECT * from `course_data`
+									  WHERE  `title` LIKE '$word%'
+									  OR `course_link` LIKE '$word%' 
+									  OR `short_desc` LIKE '$word%';" 
+									  or die($dbc->error);
+									  
 						$run_in = $dbc->query($in_course) or die ($dbc->error);
 						
 						while($row1 = mysqli_fetch_array($run_in)){
@@ -56,7 +70,10 @@ class OutputSearch{
 								$link1 = $row1['course_link'];	
 						
 								//insert to keywords table, for faster access (This is our cache table)
-								$insert_1 = "INSERT INTO `keywords` (`id`,`title`,`link`, `short_desc`,`hits`) VALUES ('','$title1','$link1','$short_desc1','');";
+								$insert_1 = "INSERT INTO `keywords`
+											(`id`,`title`,`link`, `short_desc`,`hits`) 
+									 VALUES ('','$title1','$link1','$short_desc1','');";
+											
 								$run_1 = $dbc->query($insert_1) or die($dbc->error);
 								
 								//output
@@ -64,12 +81,12 @@ class OutputSearch{
 								echo "<p>$short_desc1</p>";
 								echo "</b>";	
 								
-						}//while
-				  }//else if 
+						}
+				  }
 				  else{
 				  			echo "NO RESULTS FOR " .$word;
 							echo "</b>";
 				  	  }
-	}//end searchResults
-}//end class
+	}
+}
 ?>

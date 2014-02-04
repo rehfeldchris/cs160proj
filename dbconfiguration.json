@@ -1,14 +1,14 @@
 {
    "Localdbs":{
-      "User":"root",
-      "Password":"",
+      "User":" ",
+      "Password":" ",
       "Database":"sjsucsor_160s1g1",
       "Host":"localhost"
    },
    "Remotedbs":{
-      "User":"sjsucsor_160s1g1",
-      "Password":"cs160group1",
-      "Database":"sjsucsor_160s1g12013s",
-      "Host":"localhost"
+      "User":"----------------------------",
+      "Password":"-----------------------------",
+      "Database":"-----------------------------",
+      "Host":"-----------------------"
    }
 }

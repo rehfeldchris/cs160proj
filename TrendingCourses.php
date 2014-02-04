@@ -1,10 +1,12 @@
 <?php
  
-/**
+/***********************************************************************************
+ *
  * TrendingCourses.php increments count for a clicked link in trendingcourses table
  * This script is used to count hits for each course
+ * 
  * @Author Manzoor Ahmed
- **/
+ ************************************************************************************/
 	
 	require_once 'connection.php';
 	require_once 'ParserFactory.php';
@@ -18,34 +20,43 @@
 	
 	#make sure the url to be parsed, which validates that its probably not some junk value
 	if($hostInfo !== false){
-		//var_dump($hostInfo);
 		
-		#make sure host name is either Coursera or Edx
-		if((strcasecmp($hostInfo["host"],"www.coursera.org") == 0) || ((strcasecmp($hostInfo["host"],"www.edx.org") ==0))){
+		#make sure host name is known 
+		if(
+		      ((strcasecmp($hostInfo["host"],"www.coursera.org") == 0)) 
+		   || ((strcasecmp($hostInfo["host"],"www.edx.org") ==0))
+		   || ((strcasecmp($hostInfo["host"],"www.canvas.net") == 0)) 
+		   || ((strcasecmp($hostInfo["host"],"www.udacity.com") ==0))
+		   || ((strcasecmp($hostInfo["host"],"ocw.mit.edu") == 0))
+		   || ((strcasecmp($hostInfo["host"],"see.stanford.edu") == 0))
+		   ){
             
 			#check for '/course/'
 			$hostpath = $hostInfo['path'];
-			#'course' is subpath for coursera , and 'courses' is subpath for edx
 			$coursepath = explode('/',$hostpath);
 			
-			#this is a coursera or edx url, ie www.coursera.org/course/.. or www.edx.org/courses/... 
-			if( ((strcasecmp($hostInfo["host"],"www.coursera.org")==0) && (strcasecmp($coursepath[1],"course")==0))
-			||  ((strcasecmp($hostInfo["host"],"www.edx.org")==0) && (strcasecmp($coursepath[1],"courses")==0))){
+			#this is one of the known url, ie www.coursera.org/course/.. or www.edx.org/courses/... 
+			if(
+				((strcasecmp($hostInfo["host"],"www.coursera.org")==0) && (strcasecmp($coursepath[1],"course" )==0))
+			||  ((strcasecmp($hostInfo["host"],"www.edx.org"     )==0) && (strcasecmp($coursepath[1],"courses")==0))
+			||  ((strcasecmp($hostInfo["host"],"www.canvas.net"  )==0) && (strcasecmp($coursepath[1],"courses")==0))
+			||  ((strcasecmp($hostInfo["host"],"www.udacity.com" )==0) && (strcasecmp($coursepath[1],"course" )==0))
+			||  ((strcasecmp($hostInfo["host"],"ocw.mit.edu"     )==0) && (strcasecmp($coursepath[1],"courses")==0))
+			||  ((strcasecmp($hostInfo["host"],"see.stanford.edu")==0) && (strcasecmp($coursepath[1],"see")==0))
+			){
 				
-			  /**
+			  /************
 			   * redirect to the url while incrementing hits for this url
-            		   * but only after verifying it's an edx or coursera url
-            	           * we reject other stuff, espescially if parsing failed
-       			   */			
+               * but only after verifying it's an edx or coursera url
+               * we reject other stuff, espescially if parsing failed
+       		   */			
 					#redirect user to $url
 					header("Location: $url",true) ;
 					
 					#find id of given url
 					$idQuery ="SELECT id FROM `course_data` WHERE `course_link` LIKE '%{$url}%';";
-					//$idQuery = $dbc->real_escape_string(...) gives an erro
 					$row = $dbc->query($idQuery) or die($dbc->error);
-					
-					
+				
 					#returned column
 					$singleColumn = $row->fetch_row();
 					#get id number from column
@@ -67,16 +78,17 @@
 							#increment count in course_hits table with given id
 							$increment ="UPDATE `trendingcourses` SET `hits` = $newNum  WHERE `trendingcourses`.`id` ='$id';";
 							$dbc->query($increment) or die($dbc->error);
-					   }//if	
-				//}//else		   
-		  }//if course
+					   }	
+						   
+		  }
 		  
-	}//if hostname
-	else{
-		echo "Not valid Coursera or Edx URL";
 	}
- }//hostinfo 
+	else{
+		//don't need to update database, wrong url was passed, or someone changed the url
+		header("Location: index.php",true) ;
+	}
+ }
  else{
- 	echo "Unknown URL ";
+ 	#echo "Unknown URL ";
  }	
 ?>

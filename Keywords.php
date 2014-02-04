@@ -1,20 +1,21 @@
 <?php
 
-/*
- *OutputKeywords searches for trending keywords and outputs the results
- * @Author Manzoor Ahmed
- */
+/*******************************************************************
+ *search for trending keywords and output the results
+ * 
+ *@Author Manzoor Ahmed
+ ******************************************************************/
 
 class OutputKeywords{
 
-var $maxSearch = 5;  //search for only top 5, I just hard coded the value for now, had issues with running query 
+var $maxSearch = 5;  //search for only top 5, 
 var $maxShow =5;    //show only 5 rows 
 
 	function showKeywords($dbc){
 	
 	$query = $dbc->real_escape_string("SELECT * from `keywords` WHERE `hits` >= 5 ORDER BY hits DESC LIMIT 5;");	
 	$query_run = $dbc->query($query) or die($dbc->error);
-	//echo $query;
+	
 		if($query_run){
 		
 			echo '<div class="keyword"><span class="muted">Trending Keywords:</span> ';
@@ -26,10 +27,14 @@ var $maxShow =5;    //show only 5 rows
 			}	
 			echo "</div>";
 		
-		}//if
-	}//function
-	//showKeywords($dbc =$GLOBALS['dbc']);
+		}
+	}
 	
+	/**
+	* update hits for each keyword
+	* @param $dbc, connection to the database
+	& @param $word, the keyword which needs to be incremented
+	*/
 	function updateKeywords($dbc, $word){
 		$keyword = $dbc->real_escape_string($word);
 		if ($keyword === "") {
@@ -46,7 +51,7 @@ var $maxShow =5;    //show only 5 rows
 			$hits++;
 			$que = "UPDATE keywords SET hits='$hits'
 				WHERE id='$id'";
-			//echo $que;
+			
 			$dbc->query($que);
 		
 		} else {

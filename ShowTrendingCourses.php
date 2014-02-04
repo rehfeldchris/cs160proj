@@ -51,23 +51,18 @@
 <body>
 
 <?php
-/**
+/***************************************************************************************************************
  *ShowTrendinCourses.php select courses with hits starting from $minHits, and shows only five of them with higer hits
  *
  *@Author Manzoor Ahmed
  * 
- */
+ *********************************************************************************************************/
  
 require_once("connection.php");
 
-//we need at least five hits for a course to consider it as a trending course; we can always change this.  
+//we need at least five hits for a course to consider it as a trending course 
 global $minHits;
-//how many trending courses we need to show--$limit is the max number of courses we can show
 global $limit;
-
-#we need at least five hits for a course to consider it as a trending course; we can always change this.  
-#$minHits;
-#how many trending courses we need to show--$limit is the max number of courses we can show
 
 class ShowTrendingCourses{
 
@@ -81,14 +76,17 @@ class ShowTrendingCourses{
 	function showTrendingCourses($dbc){
 	
 	//show only five records from trending courses with higher hits
-	$query = "SELECT `id` from `trendingcourses` WHERE `hits` >= 5 ORDER BY `hits` ASC LIMIT 3;";
-	//run query
+	$query = "SELECT `id` from `trendingcourses` 
+			  WHERE `hits` >= 5 
+			  ORDER BY `hits` ASC 
+			  LIMIT 3;";
+	
 	$maxHits = $dbc->query($query) or die($dbc->error);
 		
 		if($maxHits){
 		
 			echo "<div id='holder'>";
-			//print trending course, with image
+					//print trending course, with image
 					echo "<div class ='trend'>";
 						echo"<ul style='list-style-type:none;display:inline;'>
 								<li>Trending Courses</li>
@@ -103,7 +101,6 @@ class ShowTrendingCourses{
 				//need to find the title with given $id
 				$course_query = $dbc->real_escape_string("SELECT title, course_link from `course_data` WHERE `id` = $id;");
 				$results = $dbc->query($course_query) or die($dbc->error);
-				//echo $course_query;
 				
 				if($results && $results->num_rows){
 					//get the entire row
